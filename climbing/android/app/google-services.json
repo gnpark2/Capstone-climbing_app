@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "132008850959",
+    "project_id": "climbing-ah1dsd",
+    "storage_bucket": "climbing-ah1dsd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132008850959:android:04462442c539f5d97dd57a",
+        "android_client_info": {
+          "package_name": "com.mycompany.climbing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132008850959-mipu0fg30tno61md94i06vjl6c9k0scj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.climbing",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "132008850959-ogldv5i4unq5vn0pdpbcha1jvak58gn0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLaXHAShntk7Tj0dhmYV0hsIEWSc892Ag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132008850959-ogldv5i4unq5vn0pdpbcha1jvak58gn0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "132008850959-brhopngulioe0f0n21rpii8fosdenv1u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.climbing"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
