@@ -236,155 +236,183 @@ class _Chat2InviteUsersWidgetState extends State<Chat2InviteUsersWidget> {
                               .listViewPagingController!
                               .itemList![listViewIndex];
                           return Visibility(
-                            visible: listViewUsersRecord.reference !=
-                                currentUserReference,
+                            visible: (listViewUsersRecord.following.contains(
+                                        listViewUsersRecord.reference) ==
+                                    (currentUserDocument?.following.toList() ??
+                                            [])
+                                        .contains(currentUserReference)) &&
+                                (currentUserUid != listViewUsersRecord.uid) &&
+                                ((currentUserDocument?.following.toList() ??
+                                            [])
+                                        .contains(
+                                            listViewUsersRecord.reference) ==
+                                    true) &&
+                                (widget.chatRef?.userA?.id !=
+                                    listViewUsersRecord.reference.id) &&
+                                (widget.chatRef?.userB?.id !=
+                                    listViewUsersRecord.reference.id),
                             child: Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   16.0, 0.0, 16.0, 8.0),
-                              child: Container(
-                                width: 100.0,
-                                height: 70.0,
-                                decoration: BoxDecoration(
-                                  color: _model.friendsList.contains(
-                                          listViewUsersRecord.reference)
-                                      ? FlutterFlowTheme.of(context).accent1
-                                      : FlutterFlowTheme.of(context)
-                                          .secondaryBackground,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  border: Border.all(
+                              child: AuthUserStreamWidget(
+                                builder: (context) => Container(
+                                  width: 100.0,
+                                  height: 70.0,
+                                  decoration: BoxDecoration(
                                     color: _model.friendsList.contains(
                                             listViewUsersRecord.reference)
-                                        ? FlutterFlowTheme.of(context).primary
+                                        ? FlutterFlowTheme.of(context).accent1
                                         : FlutterFlowTheme.of(context)
-                                            .alternate,
-                                    width: 1.0,
+                                            .secondaryBackground,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    border: Border.all(
+                                      color: _model.friendsList.contains(
+                                              listViewUsersRecord.reference)
+                                          ? FlutterFlowTheme.of(context).primary
+                                          : FlutterFlowTheme.of(context)
+                                              .alternate,
+                                      width: 1.0,
+                                    ),
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          12.0, 0.0, 0.0, 0.0),
-                                      child: Container(
-                                        width: 44.0,
-                                        height: 44.0,
-                                        decoration: BoxDecoration(
-                                          color: FlutterFlowTheme.of(context)
-                                              .accent1,
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          border: Border.all(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                            12.0, 0.0, 0.0, 0.0),
+                                        child: Container(
+                                          width: 44.0,
+                                          height: 44.0,
+                                          decoration: BoxDecoration(
                                             color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            width: 2.0,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: ClipRRect(
+                                                .accent1,
                                             borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: CachedNetworkImage(
-                                              fadeInDuration:
-                                                  const Duration(milliseconds: 200),
-                                              fadeOutDuration:
-                                                  const Duration(milliseconds: 200),
-                                              imageUrl:
-                                                  listViewUsersRecord.photoUrl,
-                                              width: 44.0,
-                                              height: 44.0,
-                                              fit: BoxFit.cover,
+                                                BorderRadius.circular(12.0),
+                                            border: Border.all(
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .primary,
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              child: CachedNetworkImage(
+                                                fadeInDuration:
+                                                    const Duration(milliseconds: 200),
+                                                fadeOutDuration:
+                                                    const Duration(milliseconds: 200),
+                                                imageUrl: listViewUsersRecord
+                                                    .photoUrl,
+                                                width: 44.0,
+                                                height: 44.0,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Theme(
-                                        data: ThemeData(
-                                          unselectedWidgetColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .secondaryText,
-                                        ),
-                                        child: CheckboxListTile(
-                                          value:
-                                              _model.checkboxListTileValueMap[
-                                                      listViewUsersRecord] ??=
-                                                  _model.friendsList.contains(
-                                                          listViewUsersRecord
-                                                              .reference) ==
-                                                      true,
-                                          onChanged: (newValue) async {
-                                            setState(() =>
+                                      Expanded(
+                                        child: Theme(
+                                          data: ThemeData(
+                                            unselectedWidgetColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryText,
+                                          ),
+                                          child: CheckboxListTile(
+                                            value:
                                                 _model.checkboxListTileValueMap[
-                                                        listViewUsersRecord] =
-                                                    newValue!);
-                                            if (newValue!) {
-                                              // addUser
-                                              setState(() {
-                                                _model.addToFriendsList(
-                                                    listViewUsersRecord
-                                                        .reference);
-                                              });
-                                            } else {
-                                              // removeUsser
-                                              setState(() {
-                                                _model.removeFromFriendsList(
-                                                    listViewUsersRecord
-                                                        .reference);
-                                              });
-                                            }
-                                          },
-                                          title: Text(
-                                            valueOrDefault<String>(
-                                              listViewUsersRecord.displayName,
-                                              'Ghost User',
+                                                        listViewUsersRecord] ??=
+                                                    _model.friendsList.contains(
+                                                            listViewUsersRecord
+                                                                .reference) ==
+                                                        true,
+                                            onChanged:
+                                                (listViewUsersRecord.uid ==
+                                                        currentUserUid)
+                                                    ? null
+                                                    : (newValue) async {
+                                                        setState(() => _model
+                                                                    .checkboxListTileValueMap[
+                                                                listViewUsersRecord] =
+                                                            newValue!);
+                                                        if (newValue!) {
+                                                          // addUser
+                                                          setState(() {
+                                                            _model.addToFriendsList(
+                                                                listViewUsersRecord
+                                                                    .reference);
+                                                          });
+                                                        } else {
+                                                          // removeUsser
+                                                          setState(() {
+                                                            _model.removeFromFriendsList(
+                                                                listViewUsersRecord
+                                                                    .reference);
+                                                          });
+                                                        }
+                                                      },
+                                            title: Text(
+                                              valueOrDefault<String>(
+                                                listViewUsersRecord.displayName,
+                                                'Ghost User',
+                                              ),
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyLarge
+                                                      .override(
+                                                        fontFamily:
+                                                            'Readex Pro',
+                                                        letterSpacing: 0.0,
+                                                        lineHeight: 2.0,
+                                                      ),
                                             ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyLarge
-                                                .override(
-                                                  fontFamily: 'Readex Pro',
-                                                  letterSpacing: 0.0,
-                                                  lineHeight: 2.0,
-                                                ),
-                                          ),
-                                          subtitle: Text(
-                                            valueOrDefault<String>(
-                                              listViewUsersRecord.email,
-                                              'casper@ghost.io',
+                                            subtitle: Text(
+                                              valueOrDefault<String>(
+                                                listViewUsersRecord.email,
+                                                'casper@ghost.io',
+                                              ),
+                                              style: FlutterFlowTheme.of(
+                                                      context)
+                                                  .labelSmall
+                                                  .override(
+                                                    fontFamily: 'Readex Pro',
+                                                    color: FlutterFlowTheme.of(
+                                                            context)
+                                                        .secondary,
+                                                    letterSpacing: 0.0,
+                                                  ),
                                             ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .labelSmall
-                                                .override(
-                                                  fontFamily: 'Readex Pro',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .secondary,
-                                                  letterSpacing: 0.0,
-                                                ),
-                                          ),
-                                          tileColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .secondaryBackground,
-                                          activeColor:
-                                              FlutterFlowTheme.of(context)
-                                                  .primary,
-                                          checkColor: Colors.white,
-                                          dense: false,
-                                          controlAffinity:
-                                              ListTileControlAffinity.trailing,
-                                          contentPadding:
-                                              const EdgeInsetsDirectional.fromSTEB(
-                                                  12.0, 0.0, 8.0, 0.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
+                                            tileColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .secondaryBackground,
+                                            activeColor:
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                            checkColor:
+                                                (listViewUsersRecord.uid ==
+                                                        currentUserUid)
+                                                    ? null
+                                                    : Colors.white,
+                                            dense: false,
+                                            controlAffinity:
+                                                ListTileControlAffinity
+                                                    .trailing,
+                                            contentPadding:
+                                                const EdgeInsetsDirectional.fromSTEB(
+                                                    12.0, 0.0, 8.0, 0.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

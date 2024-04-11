@@ -636,6 +636,27 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                       return;
                                                     }
 
+                                                    await UsersRecord.collection
+                                                        .doc(user.uid)
+                                                        .update(
+                                                            createUsersRecordData(
+                                                          email: _model
+                                                              .emailAddressCreateController
+                                                              .text,
+                                                          displayName: _model
+                                                              .emailAddressCreateController
+                                                              .text,
+                                                          username: random_data
+                                                              .randomInteger(
+                                                                  0, 10)
+                                                              .toString(),
+                                                          photoUrl: random_data
+                                                              .randomImageUrl(
+                                                            200,
+                                                            200,
+                                                          ),
+                                                        ));
+
                                                     await authManager
                                                         .sendEmailVerification();
                                                     ScaffoldMessenger.of(
@@ -1266,15 +1287,6 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                       return;
                                                     }
 
-                                                    await currentUserReference!
-                                                        .update(
-                                                            createUsersRecordData(
-                                                      photoUrl: random_data
-                                                          .randomImageUrl(
-                                                        100,
-                                                        100,
-                                                      ),
-                                                    ));
                                                     if (currentUserEmailVerified ==
                                                         true) {
                                                       context.pushNamedAuth(

@@ -27,3 +27,5 @@ export '/chat_groupwbubbles/image_details/image_details_widget.dart'
     show ImageDetailsWidget;
 export '/account/forgot_password/forgot_password_widget.dart'
     show ForgotPasswordWidget;
+export '/communicate/find_user/find_user_widget.dart' show FindUserWidget;
+export '/post/mypost_detail/mypost_detail_widget.dart' show MypostDetailWidget;

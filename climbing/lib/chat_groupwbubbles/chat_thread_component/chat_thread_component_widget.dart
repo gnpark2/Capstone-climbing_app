@@ -285,6 +285,8 @@ class _ChatThreadComponentWidgetState extends State<ChatThreadComponentWidget> {
                             final selectedMedia =
                                 await selectMediaWithSourceBottomSheet(
                               context: context,
+                              maxWidth: 1080.00,
+                              maxHeight: 1080.00,
                               allowPhoto: true,
                               allowVideo: true,
                               backgroundColor: FlutterFlowTheme.of(context)
@@ -544,82 +546,89 @@ class _ChatThreadComponentWidgetState extends State<ChatThreadComponentWidget> {
                                       final firestoreBatch =
                                           FirebaseFirestore.instance.batch();
                                       try {
-                                        if (_model.formKey.currentState ==
-                                                null ||
-                                            !_model.formKey.currentState!
-                                                .validate()) {
-                                          return;
+                                        if ((_model.textController.text !=
+                                                '') ||
+                                            (_model.uploadedFileUrl != '')) {
+                                          if (_model.formKey.currentState ==
+                                                  null ||
+                                              !_model.formKey.currentState!
+                                                  .validate()) {
+                                            return;
+                                          }
+                                          // newChatMessage
+
+                                          var chatMessagesRecordReference =
+                                              ChatMessagesRecord.collection
+                                                  .doc();
+                                          firestoreBatch.set(
+                                              chatMessagesRecordReference,
+                                              createChatMessagesRecordData(
+                                                user: currentUserReference,
+                                                chat: widget.chatRef?.reference,
+                                                text:
+                                                    _model.textController.text,
+                                                timestamp: getCurrentTimestamp,
+                                                image: _model.uploadedFileUrl,
+                                              ));
+                                          _model.newChat = ChatMessagesRecord
+                                              .getDocumentFromData(
+                                                  createChatMessagesRecordData(
+                                                    user: currentUserReference,
+                                                    chat: widget
+                                                        .chatRef?.reference,
+                                                    text: _model
+                                                        .textController.text,
+                                                    timestamp:
+                                                        getCurrentTimestamp,
+                                                    image:
+                                                        _model.uploadedFileUrl,
+                                                  ),
+                                                  chatMessagesRecordReference);
+                                          // clearUsers
+                                          _model.lastSeenBy = [];
+                                          // In order to add a single user reference to a list of user references we are adding our current user reference to a page state.
+                                          //
+                                          // We will then set the value of the user reference list from this page state.
+                                          // addMyUserToList
+                                          _model.addToLastSeenBy(
+                                              currentUserReference!);
+                                          // updateChatDocument
+
+                                          firestoreBatch.update(
+                                              widget.chatRef!.reference, {
+                                            ...createChatsRecordData(
+                                              lastMessageTime:
+                                                  getCurrentTimestamp,
+                                              lastMessageSentBy:
+                                                  currentUserReference,
+                                              lastMessage:
+                                                  _model.textController.text,
+                                            ),
+                                            ...mapToFirestore(
+                                              {
+                                                'last_message_seen_by':
+                                                    _model.lastSeenBy,
+                                              },
+                                            ),
+                                          });
+                                          // clearUsers
+                                          _model.lastSeenBy = [];
+                                          setState(() {
+                                            _model.textController?.clear();
+                                          });
+                                          setState(() {
+                                            _model.isDataUploading = false;
+                                            _model.uploadedLocalFile =
+                                                FFUploadedFile(
+                                                    bytes:
+                                                        Uint8List.fromList([]));
+                                            _model.uploadedFileUrl = '';
+                                          });
+
+                                          setState(() {
+                                            _model.imagesUploaded = [];
+                                          });
                                         }
-                                        // newChatMessage
-
-                                        var chatMessagesRecordReference =
-                                            ChatMessagesRecord.collection.doc();
-                                        firestoreBatch.set(
-                                            chatMessagesRecordReference,
-                                            createChatMessagesRecordData(
-                                              user: currentUserReference,
-                                              chat: widget.chatRef?.reference,
-                                              text: _model.textController.text,
-                                              timestamp: getCurrentTimestamp,
-                                              image: _model.uploadedFileUrl,
-                                            ));
-                                        _model.newChat = ChatMessagesRecord
-                                            .getDocumentFromData(
-                                                createChatMessagesRecordData(
-                                                  user: currentUserReference,
-                                                  chat:
-                                                      widget.chatRef?.reference,
-                                                  text: _model
-                                                      .textController.text,
-                                                  timestamp:
-                                                      getCurrentTimestamp,
-                                                  image: _model.uploadedFileUrl,
-                                                ),
-                                                chatMessagesRecordReference);
-                                        // clearUsers
-                                        _model.lastSeenBy = [];
-                                        // In order to add a single user reference to a list of user references we are adding our current user reference to a page state.
-                                        //
-                                        // We will then set the value of the user reference list from this page state.
-                                        // addMyUserToList
-                                        _model.addToLastSeenBy(
-                                            currentUserReference!);
-                                        // updateChatDocument
-
-                                        firestoreBatch
-                                            .update(widget.chatRef!.reference, {
-                                          ...createChatsRecordData(
-                                            lastMessageTime:
-                                                getCurrentTimestamp,
-                                            lastMessageSentBy:
-                                                currentUserReference,
-                                            lastMessage:
-                                                _model.textController.text,
-                                          ),
-                                          ...mapToFirestore(
-                                            {
-                                              'last_message_seen_by':
-                                                  _model.lastSeenBy,
-                                            },
-                                          ),
-                                        });
-                                        // clearUsers
-                                        _model.lastSeenBy = [];
-                                        setState(() {
-                                          _model.textController?.clear();
-                                        });
-                                        setState(() {
-                                          _model.isDataUploading = false;
-                                          _model.uploadedLocalFile =
-                                              FFUploadedFile(
-                                                  bytes:
-                                                      Uint8List.fromList([]));
-                                          _model.uploadedFileUrl = '';
-                                        });
-
-                                        setState(() {
-                                          _model.imagesUploaded = [];
-                                        });
                                       } finally {
                                         await firestoreBatch.commit();
                                       }

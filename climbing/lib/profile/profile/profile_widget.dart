@@ -394,7 +394,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           highlightColor: Colors.transparent,
                           onTap: () async {
                             context.pushNamed(
-                              'postDetail',
+                              'MypostDetail',
                               queryParameters: {
                                 'postdet': serializeParam(
                                   staggeredViewPostRecord,

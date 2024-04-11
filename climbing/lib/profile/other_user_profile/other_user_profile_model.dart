@@ -8,7 +8,7 @@ class OtherUserProfileModel extends FlutterFlowModel<OtherUserProfileWidget> {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  Completer<List<UsersRecord>>? firestoreRequestCompleter;
+  Completer<UsersRecord>? documentRequestCompleter;
 
   @override
   void initState(BuildContext context) {}
@@ -19,7 +19,7 @@ class OtherUserProfileModel extends FlutterFlowModel<OtherUserProfileWidget> {
   }
 
   /// Additional helper methods.
-  Future waitForFirestoreRequestCompleted({
+  Future waitForDocumentRequestCompleted({
     double minWait = 0,
     double maxWait = double.infinity,
   }) async {
@@ -27,7 +27,7 @@ class OtherUserProfileModel extends FlutterFlowModel<OtherUserProfileWidget> {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 50));
       final timeElapsed = stopwatch.elapsedMilliseconds;
-      final requestComplete = firestoreRequestCompleter?.isCompleted ?? false;
+      final requestComplete = documentRequestCompleter?.isCompleted ?? false;
       if (timeElapsed > maxWait || (requestComplete && timeElapsed > minWait)) {
         break;
       }

@@ -126,9 +126,10 @@ class _NavBarPageState extends State<NavBarPage> {
   Widget build(BuildContext context) {
     final tabs = {
       'map': const MapWidget(),
+      'profile': const ProfileWidget(),
       'newfeed': const NewfeedWidget(),
       'chat_2_main': const Chat2MainWidget(),
-      'profile': const ProfileWidget(),
+      'findUser': const FindUserWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
@@ -156,6 +157,14 @@ class _NavBarPageState extends State<NavBarPage> {
             tooltip: '',
           ),
           BottomNavigationBarItem(
+            icon: Icon(
+              Icons.settings_sharp,
+              size: 24.0,
+            ),
+            label: 'Home',
+            tooltip: '',
+          ),
+          BottomNavigationBarItem(
             icon: FaIcon(
               FontAwesomeIcons.paste,
               size: 24.0,
@@ -172,8 +181,8 @@ class _NavBarPageState extends State<NavBarPage> {
             tooltip: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings_sharp,
+            icon: FaIcon(
+              FontAwesomeIcons.search,
               size: 24.0,
             ),
             label: 'Home',

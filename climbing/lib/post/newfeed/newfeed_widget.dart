@@ -59,7 +59,7 @@ class _NewfeedWidgetState extends State<NewfeedWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(15.0, 16.0, 15.0, 0.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,95 +165,71 @@ class _NewfeedWidgetState extends State<NewfeedWidget> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            InkWell(
-                                              splashColor: Colors.transparent,
-                                              focusColor: Colors.transparent,
-                                              hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
-                                              onTap: () async {
-                                                context.pushNamed(
-                                                  'otherUserProfile',
-                                                  queryParameters: {
-                                                    'userss': serializeParam(
-                                                      containerUsersRecord,
-                                                      ParamType.Document,
-                                                    ),
-                                                  }.withoutNulls,
-                                                  extra: <String, dynamic>{
-                                                    'userss':
-                                                        containerUsersRecord,
-                                                  },
-                                                );
-                                              },
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Container(
-                                                    width: 50.0,
-                                                    height: 50.0,
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    decoration: const BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Image.network(
-                                                      containerUsersRecord
-                                                          .photoUrl,
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                            Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                  clipBehavior: Clip.antiAlias,
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsetsDirectional
-                                                            .fromSTEB(5.0, 0.0,
-                                                                0.0, 0.0),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          valueOrDefault<
-                                                              String>(
-                                                            containerUsersRecord
-                                                                .username,
-                                                            '[username]',
-                                                          ),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                letterSpacing:
-                                                                    0.0,
-                                                              ),
-                                                        ),
-                                                        Text(
-                                                          valueOrDefault<
-                                                              String>(
-                                                            containerUsersRecord
-                                                                .displayName,
-                                                            '[displayname]',
-                                                          ),
-                                                          style: FlutterFlowTheme
-                                                                  .of(context)
-                                                              .bodyMedium
-                                                              .override(
-                                                                fontFamily:
-                                                                    'Readex Pro',
-                                                                letterSpacing:
-                                                                    0.0,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                  child: Image.network(
+                                                    containerUsersRecord
+                                                        .photoUrl,
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          5.0, 0.0, 0.0, 0.0),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        valueOrDefault<String>(
+                                                          containerUsersRecord
+                                                              .username,
+                                                          '[username]',
+                                                        ),
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                ),
+                                                      ),
+                                                      Text(
+                                                        valueOrDefault<String>(
+                                                          containerUsersRecord
+                                                              .displayName,
+                                                          '[displayname]',
+                                                        ),
+                                                        style:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .override(
+                                                                  fontFamily:
+                                                                      'Readex Pro',
+                                                                  letterSpacing:
+                                                                      0.0,
+                                                                ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                             ToggleIcon(
                                               onPressed: () async {

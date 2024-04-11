@@ -138,6 +138,8 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> {
                         final selectedMedia =
                             await selectMediaWithSourceBottomSheet(
                           context: context,
+                          maxWidth: 1080.00,
+                          maxHeight: 1080.00,
                           allowPhoto: true,
                         );
                         if (selectedMedia != null &&

@@ -54,12 +54,10 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: FutureBuilder<List<UsersRecord>>(
-          future: (_model.firestoreRequestCompleter ??=
-                  Completer<List<UsersRecord>>()
-                    ..complete(queryUsersRecordOnce(
-                      singleRecord: true,
-                    )))
+        body: FutureBuilder<UsersRecord>(
+          future: (_model.documentRequestCompleter ??= Completer<UsersRecord>()
+                ..complete(
+                    UsersRecord.getDocumentOnce(widget.userss!.reference)))
               .future,
           builder: (context, snapshot) {
             // Customize what your widget looks like when it's loading.
@@ -76,21 +74,14 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                 ),
               );
             }
-            List<UsersRecord> columnUsersRecordList = snapshot.data!;
-            // Return an empty Container when the item does not exist.
-            if (snapshot.data!.isEmpty) {
-              return Container();
-            }
-            final columnUsersRecord = columnUsersRecordList.isNotEmpty
-                ? columnUsersRecordList.first
-                : null;
+            final columnUsersRecord = snapshot.data!;
             return SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
+                        const EdgeInsetsDirectional.fromSTEB(10.0, 16.0, 10.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,7 +141,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                             shape: BoxShape.circle,
                           ),
                           child: Image.network(
-                            columnUsersRecord!.photoUrl,
+                            columnUsersRecord.photoUrl,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -161,7 +152,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  widget.userss!.following.length.toString(),
+                                  columnUsersRecord.following.length.toString(),
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
@@ -187,7 +178,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
                                   Text(
-                                    widget.userss!.followedUsers.length
+                                    columnUsersRecord.followedUsers.length
                                         .toString(),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
@@ -227,7 +218,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                             Text(
                               valueOrDefault<String>(
                                 columnUsersRecord.displayName,
-                                'anotherUser',
+                                'ghost user',
                               ),
                               style: FlutterFlowTheme.of(context)
                                   .titleLarge
@@ -270,97 +261,124 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                             ),
                           ],
                         ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            if ((currentUserDocument?.following.toList() ?? [])
-                                    .contains(widget.userss?.reference) ==
-                                false)
-                              AuthUserStreamWidget(
-                                builder: (context) => FFButtonWidget(
-                                  onPressed: () async {
-                                    await currentUserReference!.update({
-                                      ...mapToFirestore(
-                                        {
-                                          'following': FieldValue.arrayUnion(
-                                              [widget.userss?.reference]),
-                                        },
-                                      ),
-                                    });
-                                    setState(() => _model
-                                        .firestoreRequestCompleter = null);
-                                    await _model
-                                        .waitForFirestoreRequestCompleted();
-                                  },
-                                  text: 'Follow',
-                                  options: FFButtonOptions(
-                                    height: 40.0,
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          color: Colors.white,
-                                          letterSpacing: 0.0,
+                        if (currentUserUid != columnUsersRecord.uid)
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              if ((currentUserDocument?.following.toList() ??
+                                          [])
+                                      .contains(widget.userss?.reference) ==
+                                  false)
+                                AuthUserStreamWidget(
+                                  builder: (context) => FFButtonWidget(
+                                    onPressed: () async {
+                                      await currentUserReference!.update({
+                                        ...mapToFirestore(
+                                          {
+                                            'following': FieldValue.arrayUnion(
+                                                [widget.userss?.reference]),
+                                          },
                                         ),
-                                    elevation: 3.0,
-                                    borderSide: const BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1.0,
+                                      });
+
+                                      await widget.userss!.reference.update({
+                                        ...mapToFirestore(
+                                          {
+                                            'followedUsers':
+                                                FieldValue.arrayUnion(
+                                                    [currentUserReference]),
+                                          },
+                                        ),
+                                      });
+                                      setState(() => _model
+                                          .documentRequestCompleter = null);
+                                      await _model
+                                          .waitForDocumentRequestCompleted();
+                                    },
+                                    text: 'Follow',
+                                    options: FFButtonOptions(
+                                      height: 40.0,
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          24.0, 0.0, 24.0, 0.0),
+                                      iconPadding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.white,
+                                            letterSpacing: 0.0,
+                                          ),
+                                      elevation: 3.0,
+                                      borderSide: const BorderSide(
+                                        color: Colors.transparent,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                              ),
-                            if ((currentUserDocument?.following.toList() ?? [])
-                                    .contains(widget.userss?.reference) ==
-                                true)
-                              AuthUserStreamWidget(
-                                builder: (context) => FFButtonWidget(
-                                  onPressed: () async {
-                                    await currentUserReference!.update({
-                                      ...mapToFirestore(
-                                        {
-                                          'following': FieldValue.arrayRemove(
-                                              [widget.userss?.reference]),
-                                        },
-                                      ),
-                                    });
-                                    setState(() => _model
-                                        .firestoreRequestCompleter = null);
-                                    await _model
-                                        .waitForFirestoreRequestCompleted();
-                                  },
-                                  text: 'UnFollow',
-                                  options: FFButtonOptions(
-                                    height: 40.0,
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        24.0, 0.0, 24.0, 0.0),
-                                    iconPadding: const EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          color: Colors.white,
-                                          letterSpacing: 0.0,
+                              if ((currentUserDocument?.following.toList() ??
+                                          [])
+                                      .contains(widget.userss?.reference) ==
+                                  true)
+                                AuthUserStreamWidget(
+                                  builder: (context) => FFButtonWidget(
+                                    onPressed: () async {
+                                      await currentUserReference!.update({
+                                        ...mapToFirestore(
+                                          {
+                                            'following': FieldValue.arrayRemove(
+                                                [widget.userss?.reference]),
+                                          },
                                         ),
-                                    elevation: 3.0,
-                                    borderSide: const BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1.0,
+                                      });
+
+                                      await widget.userss!.reference.update({
+                                        ...mapToFirestore(
+                                          {
+                                            'followedUsers':
+                                                FieldValue.arrayRemove(
+                                                    [currentUserReference]),
+                                          },
+                                        ),
+                                      });
+                                      setState(() => _model
+                                          .documentRequestCompleter = null);
+                                      await _model
+                                          .waitForDocumentRequestCompleted();
+                                    },
+                                    text: 'UnFollow',
+                                    options: FFButtonOptions(
+                                      height: 40.0,
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          24.0, 0.0, 24.0, 0.0),
+                                      iconPadding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      textStyle: FlutterFlowTheme.of(context)
+                                          .titleSmall
+                                          .override(
+                                            fontFamily: 'Readex Pro',
+                                            color: Colors.white,
+                                            letterSpacing: 0.0,
+                                          ),
+                                      elevation: 3.0,
+                                      borderSide: const BorderSide(
+                                        color: Colors.transparent,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                   ),

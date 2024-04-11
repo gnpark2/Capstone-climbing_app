@@ -96,7 +96,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         ),
         FFRoute(
           name: 'profile',
-          path: '/settings',
+          path: '/profile',
           requireAuth: true,
           builder: (context, params) => params.isEmpty
               ? const NavBarPage(initialPage: 'profile')
@@ -120,7 +120,6 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'otherUserProfile',
           path: '/otherUserProfile',
-          requireAuth: true,
           asyncParams: {
             'userss': getDoc(['users'], UsersRecord.fromSnapshot),
             'chatsss': getDoc(['chats'], ChatsRecord.fromSnapshot),
@@ -248,6 +247,34 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: 'forgotPassword',
           path: '/forgotPassword',
           builder: (context, params) => const ForgotPasswordWidget(),
+        ),
+        FFRoute(
+          name: 'findUser',
+          path: '/findUser',
+          asyncParams: {
+            'chatRef': getDoc(['chats'], ChatsRecord.fromSnapshot),
+          },
+          builder: (context, params) => params.isEmpty
+              ? const NavBarPage(initialPage: 'findUser')
+              : FindUserWidget(
+                  chatRef: params.getParam(
+                    'chatRef',
+                    ParamType.Document,
+                  ),
+                ),
+        ),
+        FFRoute(
+          name: 'MypostDetail',
+          path: '/mypostDetail',
+          asyncParams: {
+            'postdet': getDoc(['users', 'post'], PostRecord.fromSnapshot),
+          },
+          builder: (context, params) => MypostDetailWidget(
+            postdet: params.getParam(
+              'postdet',
+              ParamType.Document,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
       observers: [routeObserver],

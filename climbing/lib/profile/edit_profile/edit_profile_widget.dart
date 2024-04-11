@@ -123,6 +123,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                 phoneNumber: _model.textController3.text,
                                 username: _model.textController2.text,
                                 email: currentUserEmail,
+                                bio: _model.textController4.text,
                               ));
 
                               context.pushNamed('profile');

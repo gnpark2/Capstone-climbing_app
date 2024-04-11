@@ -121,9 +121,7 @@ class _FollowingWidgetState extends State<FollowingWidget> {
                         ),
                       );
                     }
-                    List<UsersRecord> listViewUsersRecordList = snapshot.data!
-                        .where((u) => u.uid != currentUserUid)
-                        .toList();
+                    List<UsersRecord> listViewUsersRecordList = snapshot.data!;
                     // Return an empty Container when the item does not exist.
                     if (snapshot.data!.isEmpty) {
                       return Container();
@@ -147,8 +145,9 @@ class _FollowingWidgetState extends State<FollowingWidget> {
                             return Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(
                                   0.0, 10.0, 0.0, 10.0),
-                              child: StreamBuilder<UsersRecord>(
-                                stream: UsersRecord.getDocument(followingItem),
+                              child: FutureBuilder<UsersRecord>(
+                                future:
+                                    UsersRecord.getDocumentOnce(followingItem),
                                 builder: (context, snapshot) {
                                   // Customize what your widget looks like when it's loading.
                                   if (!snapshot.hasData) {
@@ -251,43 +250,7 @@ class _FollowingWidgetState extends State<FollowingWidget> {
                                           if ((currentUserDocument?.following
                                                           .toList() ??
                                                       [])
-                                                  .contains(listViewUsersRecord
-                                                      ?.reference) ==
-                                              false)
-                                            FlutterFlowIconButton(
-                                              borderColor:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              borderRadius: 20.0,
-                                              borderWidth: 1.0,
-                                              buttonSize: 40.0,
-                                              icon: Icon(
-                                                Icons.add,
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryText,
-                                                size: 24.0,
-                                              ),
-                                              onPressed: () async {
-                                                await currentUserReference!
-                                                    .update({
-                                                  ...mapToFirestore(
-                                                    {
-                                                      'following': FieldValue
-                                                          .arrayUnion([
-                                                        listViewUsersRecord
-                                                            ?.reference
-                                                      ]),
-                                                    },
-                                                  ),
-                                                });
-                                              },
-                                            ),
-                                          if ((currentUserDocument?.following
-                                                          .toList() ??
-                                                      [])
-                                                  .contains(listViewUsersRecord
-                                                      ?.reference) ==
+                                                  .contains(followingItem) ==
                                               true)
                                             FlutterFlowIconButton(
                                               borderColor:
@@ -310,8 +273,7 @@ class _FollowingWidgetState extends State<FollowingWidget> {
                                                     {
                                                       'following': FieldValue
                                                           .arrayRemove([
-                                                        listViewUsersRecord
-                                                            ?.reference
+                                                        rowUsersRecord.reference
                                                       ]),
                                                     },
                                                   ),

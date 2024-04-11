@@ -8,11 +8,11 @@ import '/post/comment/comment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'post_detail_model.dart';
-export 'post_detail_model.dart';
+import 'mypost_detail_model.dart';
+export 'mypost_detail_model.dart';
 
-class PostDetailWidget extends StatefulWidget {
-  const PostDetailWidget({
+class MypostDetailWidget extends StatefulWidget {
+  const MypostDetailWidget({
     super.key,
     this.postdet,
   });
@@ -20,18 +20,18 @@ class PostDetailWidget extends StatefulWidget {
   final PostRecord? postdet;
 
   @override
-  State<PostDetailWidget> createState() => _PostDetailWidgetState();
+  State<MypostDetailWidget> createState() => _MypostDetailWidgetState();
 }
 
-class _PostDetailWidgetState extends State<PostDetailWidget> {
-  late PostDetailModel _model;
+class _MypostDetailWidgetState extends State<MypostDetailWidget> {
+  late MypostDetailModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => PostDetailModel());
+    _model = createModel(context, () => MypostDetailModel());
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -67,7 +67,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
             ),
           );
         }
-        final postDetailPostRecord = snapshot.data!;
+        final mypostDetailPostRecord = snapshot.data!;
         return GestureDetector(
           onTap: () => _model.unfocusNode.canRequestFocus
               ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -85,7 +85,50 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'edit post',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Readex Pro',
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                          FlutterFlowIconButton(
+                            borderRadius: 20.0,
+                            borderWidth: 1.0,
+                            buttonSize: 40.0,
+                            icon: FaIcon(
+                              FontAwesomeIcons.pen,
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              size: 24.0,
+                            ),
+                            onPressed: () async {
+                              context.pushNamed(
+                                'postDetailUserEdit',
+                                queryParameters: {
+                                  'postdet': serializeParam(
+                                    widget.postdet,
+                                    ParamType.Document,
+                                  ),
+                                }.withoutNulls,
+                                extra: <String, dynamic>{
+                                  'postdet': widget.postdet,
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,7 +161,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                 children: [
                                   Text(
                                     dateTimeFormat('MMMEd',
-                                        postDetailPostRecord.timePosted!),
+                                        mypostDetailPostRecord.timePosted!),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -130,7 +173,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                     padding: const EdgeInsetsDirectional.fromSTEB(
                                         0.0, 5.0, 0.0, 0.0),
                                     child: Text(
-                                      postDetailPostRecord.postTitle
+                                      mypostDetailPostRecord.postTitle
                                           .maybeHandleOverflow(
                                         maxChars: 25,
                                         replacement: '…',
@@ -147,22 +190,22 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                               ),
                             ],
                           ),
-                          if (postDetailPostRecord.postUser?.id !=
+                          if (mypostDetailPostRecord.postUser?.id !=
                               currentUserUid)
                             ToggleIcon(
                               onPressed: () async {
                                 setState(
                                   () => FFAppState().SavedPost.contains(
-                                          postDetailPostRecord.reference)
+                                          mypostDetailPostRecord.reference)
                                       ? FFAppState().removeFromSavedPost(
-                                          postDetailPostRecord.reference)
+                                          mypostDetailPostRecord.reference)
                                       : FFAppState().addToSavedPost(
-                                          postDetailPostRecord.reference),
+                                          mypostDetailPostRecord.reference),
                                 );
                               },
                               value: FFAppState()
                                   .SavedPost
-                                  .contains(postDetailPostRecord.reference),
+                                  .contains(mypostDetailPostRecord.reference),
                               onIcon: FaIcon(
                                 FontAwesomeIcons.solidBookmark,
                                 color: FlutterFlowTheme.of(context).primary,
@@ -184,7 +227,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.network(
-                          postDetailPostRecord.postPhoto,
+                          mypostDetailPostRecord.postPhoto,
                           width: MediaQuery.sizeOf(context).width * 0.95,
                           height: 200.0,
                           fit: BoxFit.cover,
@@ -205,14 +248,15 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                 onPressed: () async {
                                   final postLikedByElement =
                                       currentUserReference;
-                                  final postLikedByUpdate = postDetailPostRecord
-                                          .postLikedBy
-                                          .contains(postLikedByElement)
-                                      ? FieldValue.arrayRemove(
-                                          [postLikedByElement])
-                                      : FieldValue.arrayUnion(
-                                          [postLikedByElement]);
-                                  await postDetailPostRecord.reference.update({
+                                  final postLikedByUpdate =
+                                      mypostDetailPostRecord.postLikedBy
+                                              .contains(postLikedByElement)
+                                          ? FieldValue.arrayRemove(
+                                              [postLikedByElement])
+                                          : FieldValue.arrayUnion(
+                                              [postLikedByElement]);
+                                  await mypostDetailPostRecord.reference
+                                      .update({
                                     ...mapToFirestore(
                                       {
                                         'Post_liked_by': postLikedByUpdate,
@@ -220,7 +264,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                     ),
                                   });
                                 },
-                                value: postDetailPostRecord.postLikedBy
+                                value: mypostDetailPostRecord.postLikedBy
                                     .contains(currentUserReference),
                                 onIcon: const Icon(
                                   Icons.favorite,
@@ -236,7 +280,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                               ),
                               Text(
                                 formatNumber(
-                                  postDetailPostRecord.postLikedBy.length,
+                                  mypostDetailPostRecord.postLikedBy.length,
                                   formatType: FormatType.compact,
                                 ),
                                 style: FlutterFlowTheme.of(context)
@@ -279,7 +323,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                                 context),
                                             child: CommentWidget(
                                               commentparameter:
-                                                  postDetailPostRecord,
+                                                  mypostDetailPostRecord,
                                             ),
                                           ),
                                         );
@@ -302,7 +346,7 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                           commentsRecord.where(
                                         'post_type',
                                         isEqualTo:
-                                            postDetailPostRecord.reference,
+                                            mypostDetailPostRecord.reference,
                                       ),
                                     ),
                                     builder: (context, snapshot) {
@@ -371,43 +415,23 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                 );
                               }
                               final circleImageUsersRecord = snapshot.data!;
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  context.pushNamed(
-                                    'otherUserProfile',
-                                    queryParameters: {
-                                      'userss': serializeParam(
-                                        circleImageUsersRecord,
-                                        ParamType.Document,
-                                      ),
-                                    }.withoutNulls,
-                                    extra: <String, dynamic>{
-                                      'userss': circleImageUsersRecord,
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.network(
-                                    circleImageUsersRecord.photoUrl,
-                                    fit: BoxFit.cover,
-                                  ),
+                              return Container(
+                                width: 50.0,
+                                height: 50.0,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Image.network(
+                                  circleImageUsersRecord.photoUrl,
+                                  fit: BoxFit.cover,
                                 ),
                               );
                             },
                           ),
                         ),
                         Text(
-                          postDetailPostRecord.postDescription,
+                          mypostDetailPostRecord.postDescription,
                           style:
                               FlutterFlowTheme.of(context).bodyMedium.override(
                                     fontFamily: 'Readex Pro',
