@@ -13,29 +13,30 @@ class SignInAndUpModel extends FlutterFlowModel<SignInAndUpWidget> {
 
   // State field(s) for emailAddress_Create widget.
   FocusNode? emailAddressCreateFocusNode;
-  TextEditingController? emailAddressCreateController;
+  TextEditingController? emailAddressCreateTextController;
   String? Function(BuildContext, String?)?
-      emailAddressCreateControllerValidator;
+      emailAddressCreateTextControllerValidator;
   // State field(s) for password_Create widget.
   FocusNode? passwordCreateFocusNode;
-  TextEditingController? passwordCreateController;
+  TextEditingController? passwordCreateTextController;
   late bool passwordCreateVisibility;
-  String? Function(BuildContext, String?)? passwordCreateControllerValidator;
+  String? Function(BuildContext, String?)?
+      passwordCreateTextControllerValidator;
   // State field(s) for password_CreateConfirm widget.
   FocusNode? passwordCreateConfirmFocusNode;
-  TextEditingController? passwordCreateConfirmController;
+  TextEditingController? passwordCreateConfirmTextController;
   late bool passwordCreateConfirmVisibility;
   String? Function(BuildContext, String?)?
-      passwordCreateConfirmControllerValidator;
+      passwordCreateConfirmTextControllerValidator;
   // State field(s) for emailAddress widget.
   FocusNode? emailAddressFocusNode;
-  TextEditingController? emailAddressController;
-  String? Function(BuildContext, String?)? emailAddressControllerValidator;
+  TextEditingController? emailAddressTextController;
+  String? Function(BuildContext, String?)? emailAddressTextControllerValidator;
   // State field(s) for password widget.
   FocusNode? passwordFocusNode;
-  TextEditingController? passwordController;
+  TextEditingController? passwordTextController;
   late bool passwordVisibility;
-  String? Function(BuildContext, String?)? passwordControllerValidator;
+  String? Function(BuildContext, String?)? passwordTextControllerValidator;
 
   @override
   void initState(BuildContext context) {
@@ -49,18 +50,18 @@ class SignInAndUpModel extends FlutterFlowModel<SignInAndUpWidget> {
     unfocusNode.dispose();
     tabBarController?.dispose();
     emailAddressCreateFocusNode?.dispose();
-    emailAddressCreateController?.dispose();
+    emailAddressCreateTextController?.dispose();
 
     passwordCreateFocusNode?.dispose();
-    passwordCreateController?.dispose();
+    passwordCreateTextController?.dispose();
 
     passwordCreateConfirmFocusNode?.dispose();
-    passwordCreateConfirmController?.dispose();
+    passwordCreateConfirmTextController?.dispose();
 
     emailAddressFocusNode?.dispose();
-    emailAddressController?.dispose();
+    emailAddressTextController?.dispose();
 
     passwordFocusNode?.dispose();
-    passwordController?.dispose();
+    passwordTextController?.dispose();
   }
 }

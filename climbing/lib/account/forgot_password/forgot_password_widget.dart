@@ -166,7 +166,6 @@ class _ForgotPasswordWidgetState extends State<ForgotPasswordWidget> {
                               fontFamily: 'Readex Pro',
                               letterSpacing: 0.0,
                             ),
-                        minLines: null,
                         validator: _model.emailTextControllerValidator
                             .asValidator(context),
                       ),

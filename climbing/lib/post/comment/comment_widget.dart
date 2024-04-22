@@ -330,7 +330,6 @@ class _CommentWidgetState extends State<CommentWidget> {
                                     fontFamily: 'Readex Pro',
                                     letterSpacing: 0.0,
                                   ),
-                          minLines: null,
                           validator: _model.textControllerValidator
                               .asValidator(context),
                         ),

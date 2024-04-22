@@ -26,75 +26,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final animationsMap = {
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 1.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 400.ms,
-          begin: const Offset(0.0, 80.0),
-          end: const Offset(0.0, 0.0),
-        ),
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 150.ms,
-          duration: 400.ms,
-          begin: const Offset(0.8, 0.8),
-          end: const Offset(1.0, 1.0),
-        ),
-      ],
-    ),
-    'columnOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 300.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 300.ms,
-          duration: 400.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 300.ms,
-          duration: 400.ms,
-          begin: const Offset(0.0, 20.0),
-          end: const Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-    'columnOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        VisibilityEffect(duration: 300.ms),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 300.ms,
-          duration: 400.ms,
-          begin: 0.0,
-          end: 1.0,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 300.ms,
-          duration: 400.ms,
-          begin: const Offset(0.0, 20.0),
-          end: const Offset(0.0, 0.0),
-        ),
-      ],
-    ),
-  };
+  final animationsMap = <String, AnimationInfo>{};
 
   @override
   void initState() {
@@ -106,20 +38,90 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
       length: 2,
       initialIndex: 0,
     )..addListener(() => setState(() {}));
-    _model.emailAddressCreateController ??= TextEditingController();
+    _model.emailAddressCreateTextController ??= TextEditingController();
     _model.emailAddressCreateFocusNode ??= FocusNode();
 
-    _model.passwordCreateController ??= TextEditingController();
+    _model.passwordCreateTextController ??= TextEditingController();
     _model.passwordCreateFocusNode ??= FocusNode();
 
-    _model.passwordCreateConfirmController ??= TextEditingController();
+    _model.passwordCreateConfirmTextController ??= TextEditingController();
     _model.passwordCreateConfirmFocusNode ??= FocusNode();
 
-    _model.emailAddressController ??= TextEditingController();
+    _model.emailAddressTextController ??= TextEditingController();
     _model.emailAddressFocusNode ??= FocusNode();
 
-    _model.passwordController ??= TextEditingController();
+    _model.passwordTextController ??= TextEditingController();
     _model.passwordFocusNode ??= FocusNode();
+
+    animationsMap.addAll({
+      'containerOnPageLoadAnimation': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 1.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 400.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          MoveEffect(
+            curve: Curves.easeInOut,
+            delay: 0.0.ms,
+            duration: 400.0.ms,
+            begin: const Offset(0.0, 80.0),
+            end: const Offset(0.0, 0.0),
+          ),
+          ScaleEffect(
+            curve: Curves.easeInOut,
+            delay: 150.0.ms,
+            duration: 400.0.ms,
+            begin: const Offset(0.8, 0.8),
+            end: const Offset(1.0, 1.0),
+          ),
+        ],
+      ),
+      'columnOnPageLoadAnimation1': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 300.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 300.0.ms,
+            duration: 400.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          MoveEffect(
+            curve: Curves.easeInOut,
+            delay: 300.0.ms,
+            duration: 400.0.ms,
+            begin: const Offset(0.0, 20.0),
+            end: const Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+      'columnOnPageLoadAnimation2': AnimationInfo(
+        trigger: AnimationTrigger.onPageLoad,
+        effectsBuilder: () => [
+          VisibilityEffect(duration: 300.ms),
+          FadeEffect(
+            curve: Curves.easeInOut,
+            delay: 300.0.ms,
+            duration: 400.0.ms,
+            begin: 0.0,
+            end: 1.0,
+          ),
+          MoveEffect(
+            curve: Curves.easeInOut,
+            delay: 300.0.ms,
+            duration: 400.0.ms,
+            begin: const Offset(0.0, 20.0),
+            end: const Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
@@ -240,7 +242,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                 width: double.infinity,
                                                 child: TextFormField(
                                                   controller: _model
-                                                      .emailAddressCreateController,
+                                                      .emailAddressCreateTextController,
                                                   focusNode: _model
                                                       .emailAddressCreateFocusNode,
                                                   autofocus: true,
@@ -325,7 +327,6 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
-                                                  minLines: null,
                                                   keyboardType: TextInputType
                                                       .emailAddress,
                                                   cursorColor:
@@ -333,7 +334,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                               context)
                                                           .primary,
                                                   validator: _model
-                                                      .emailAddressCreateControllerValidator
+                                                      .emailAddressCreateTextControllerValidator
                                                       .asValidator(context),
                                                 ),
                                               ),
@@ -346,7 +347,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                 width: double.infinity,
                                                 child: TextFormField(
                                                   controller: _model
-                                                      .passwordCreateController,
+                                                      .passwordCreateTextController,
                                                   focusNode: _model
                                                       .passwordCreateFocusNode,
                                                   autofocus: true,
@@ -454,13 +455,12 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
-                                                  minLines: null,
                                                   cursorColor:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   validator: _model
-                                                      .passwordCreateControllerValidator
+                                                      .passwordCreateTextControllerValidator
                                                       .asValidator(context),
                                                 ),
                                               ),
@@ -473,7 +473,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                 width: double.infinity,
                                                 child: TextFormField(
                                                   controller: _model
-                                                      .passwordCreateConfirmController,
+                                                      .passwordCreateConfirmTextController,
                                                   focusNode: _model
                                                       .passwordCreateConfirmFocusNode,
                                                   autofocus: true,
@@ -582,13 +582,12 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
-                                                  minLines: null,
                                                   cursorColor:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   validator: _model
-                                                      .passwordCreateConfirmControllerValidator
+                                                      .passwordCreateConfirmTextControllerValidator
                                                       .asValidator(context),
                                                 ),
                                               ),
@@ -605,10 +604,10 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                     GoRouter.of(context)
                                                         .prepareAuthEvent();
                                                     if (_model
-                                                            .passwordCreateController
+                                                            .passwordCreateTextController
                                                             .text !=
                                                         _model
-                                                            .passwordCreateConfirmController
+                                                            .passwordCreateConfirmTextController
                                                             .text) {
                                                       ScaffoldMessenger.of(
                                                               context)
@@ -626,10 +625,10 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                         .createAccountWithEmail(
                                                       context,
                                                       _model
-                                                          .emailAddressCreateController
+                                                          .emailAddressCreateTextController
                                                           .text,
                                                       _model
-                                                          .passwordCreateController
+                                                          .passwordCreateTextController
                                                           .text,
                                                     );
                                                     if (user == null) {
@@ -641,10 +640,10 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                         .update(
                                                             createUsersRecordData(
                                                           email: _model
-                                                              .emailAddressCreateController
+                                                              .emailAddressCreateTextController
                                                               .text,
                                                           displayName: _model
-                                                              .emailAddressCreateController
+                                                              .emailAddressCreateTextController
                                                               .text,
                                                           username: random_data
                                                               .randomInteger(
@@ -1024,7 +1023,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                 width: double.infinity,
                                                 child: TextFormField(
                                                   controller: _model
-                                                      .emailAddressController,
+                                                      .emailAddressTextController,
                                                   focusNode: _model
                                                       .emailAddressFocusNode,
                                                   autofocus: true,
@@ -1114,7 +1113,6 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
-                                                  minLines: null,
                                                   keyboardType: TextInputType
                                                       .emailAddress,
                                                   cursorColor:
@@ -1122,7 +1120,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                               context)
                                                           .primary,
                                                   validator: _model
-                                                      .emailAddressControllerValidator
+                                                      .emailAddressTextControllerValidator
                                                       .asValidator(context),
                                                 ),
                                               ),
@@ -1134,8 +1132,8 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                               child: SizedBox(
                                                 width: double.infinity,
                                                 child: TextFormField(
-                                                  controller:
-                                                      _model.passwordController,
+                                                  controller: _model
+                                                      .passwordTextController,
                                                   focusNode:
                                                       _model.passwordFocusNode,
                                                   autofocus: true,
@@ -1248,13 +1246,12 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
-                                                  minLines: null,
                                                   cursorColor:
                                                       FlutterFlowTheme.of(
                                                               context)
                                                           .primary,
                                                   validator: _model
-                                                      .passwordControllerValidator
+                                                      .passwordTextControllerValidator
                                                       .asValidator(context),
                                                 ),
                                               ),
@@ -1278,9 +1275,10 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             .signInWithEmail(
                                                       context,
                                                       _model
-                                                          .emailAddressController
+                                                          .emailAddressTextController
                                                           .text,
-                                                      _model.passwordController
+                                                      _model
+                                                          .passwordTextController
                                                           .text,
                                                     );
                                                     if (user == null) {

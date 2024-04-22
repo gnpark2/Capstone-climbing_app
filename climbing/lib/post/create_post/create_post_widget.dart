@@ -353,7 +353,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                               fontFamily: 'Readex Pro',
                               letterSpacing: 0.0,
                             ),
-                        minLines: null,
                         validator: _model.textController1Validator
                             .asValidator(context),
                       ),
@@ -415,7 +414,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                                   ),
                           textAlign: TextAlign.start,
                           maxLines: null,
-                          minLines: null,
                           validator: _model.textController2Validator
                               .asValidator(context),
                         ),

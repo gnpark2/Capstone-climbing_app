@@ -302,7 +302,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                           fontFamily: 'Readex Pro',
                                           letterSpacing: 0.0,
                                         ),
-                                    minLines: null,
                                     validator: _model.textController1Validator
                                         .asValidator(context),
                                   ),
@@ -402,7 +401,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                           fontFamily: 'Readex Pro',
                                           letterSpacing: 0.0,
                                         ),
-                                    minLines: null,
                                     validator: _model.textController2Validator
                                         .asValidator(context),
                                   ),
@@ -502,7 +500,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                           fontFamily: 'Readex Pro',
                                           letterSpacing: 0.0,
                                         ),
-                                    minLines: null,
                                     validator: _model.textController3Validator
                                         .asValidator(context),
                                   ),
@@ -602,7 +599,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                           fontFamily: 'Readex Pro',
                                           letterSpacing: 0.0,
                                         ),
-                                    minLines: null,
                                     validator: _model.textController4Validator
                                         .asValidator(context),
                                   ),
@@ -692,7 +688,6 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                                       fontFamily: 'Readex Pro',
                                       letterSpacing: 0.0,
                                     ),
-                                minLines: null,
                                 validator: _model.textController5Validator
                                     .asValidator(context),
                               ),
