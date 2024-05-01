@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 
 import '/backend/schema/util/firestore_util.dart';
-import '/backend/schema/util/schema_util.dart';
 
 import 'index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -61,10 +60,10 @@ class PostRecord extends FirestoreRecord {
   List<DocumentReference> get postLikedBy => _postLikedBy ?? const [];
   bool hasPostLikedBy() => _postLikedBy != null;
 
-  // "location_latlog" field.
-  LatLng? _locationLatlog;
-  LatLng? get locationLatlog => _locationLatlog;
-  bool hasLocationLatlog() => _locationLatlog != null;
+  // "latlng" field.
+  LatLng? _latlng;
+  LatLng? get latlng => _latlng;
+  bool hasLatlng() => _latlng != null;
 
   DocumentReference get parentReference => reference.parent.parent!;
 
@@ -78,7 +77,7 @@ class PostRecord extends FirestoreRecord {
     _numComments = castToType<int>(snapshotData['num_comments']);
     _numVotes = castToType<int>(snapshotData['num_votes']);
     _postLikedBy = getDataList(snapshotData['Post_liked_by']);
-    _locationLatlog = snapshotData['location_latlog'] as LatLng?;
+    _latlng = snapshotData['latlng'] as LatLng?;
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -127,7 +126,7 @@ Map<String, dynamic> createPostRecordData({
   DateTime? timePosted,
   int? numComments,
   int? numVotes,
-  LatLng? locationLatlog,
+  LatLng? latlng,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -138,7 +137,7 @@ Map<String, dynamic> createPostRecordData({
       'time_posted': timePosted,
       'num_comments': numComments,
       'num_votes': numVotes,
-      'location_latlog': locationLatlog,
+      'latlng': latlng,
     }.withoutNulls,
   );
 
@@ -160,7 +159,7 @@ class PostRecordDocumentEquality implements Equality<PostRecord> {
         e1?.numComments == e2?.numComments &&
         e1?.numVotes == e2?.numVotes &&
         listEquality.equals(e1?.postLikedBy, e2?.postLikedBy) &&
-        e1?.locationLatlog == e2?.locationLatlog;
+        e1?.latlng == e2?.latlng;
   }
 
   @override
@@ -174,7 +173,7 @@ class PostRecordDocumentEquality implements Equality<PostRecord> {
         e?.numComments,
         e?.numVotes,
         e?.postLikedBy,
-        e?.locationLatlog
+        e?.latlng
       ]);
 
   @override

@@ -1,7 +1,7 @@
 // Export pages
 export '/account/sign_in_and_up/sign_in_and_up_widget.dart'
     show SignInAndUpWidget;
-export '/pages/map/map_widget.dart' show MapWidget;
+export '/map/map/map_widget.dart' show MapWidget;
 export '/profile/profile/profile_widget.dart' show ProfileWidget;
 export '/pages/landing_page/landing_page_widget.dart' show LandingPageWidget;
 export '/post/create_post/create_post_widget.dart' show CreatePostWidget;
@@ -29,3 +29,4 @@ export '/account/forgot_password/forgot_password_widget.dart'
     show ForgotPasswordWidget;
 export '/communicate/find_user/find_user_widget.dart' show FindUserWidget;
 export '/post/mypost_detail/mypost_detail_widget.dart' show MypostDetailWidget;
+export '/test_page/test_page_widget.dart' show TestPageWidget;

@@ -1,3 +1,5 @@
+import 'package:climbing/flutter_flow/uploaded_file.dart';
+
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
@@ -6,6 +8,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/flutter_flow/upload_data.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'create_post_model.dart';
@@ -20,6 +23,9 @@ class CreatePostWidget extends StatefulWidget {
 
 class _CreatePostWidgetState extends State<CreatePostWidget> {
   late CreatePostModel _model;
+  //test
+  late SelectedFile selecF;
+  //test
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -108,14 +114,20 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
+                        print(selecF.toString() + 'selecF값 입니다.');
+                        LatLng? latLng = await functions.getLatLng(selecF);
+
                         await PostRecord.createDoc(currentUserReference!)
                             .set(createPostRecordData(
                           postDescription: _model.textController2.text,
                           postUser: currentUserReference,
                           timePosted: getCurrentTimestamp,
                           postPhoto: _model.uploadedFileUrl1,
+                          latlng: latLng,
                         ));
-
+                        //test
+                        print(latLng.toString() + '입니다.');
+                        //test
                         context.pushNamed('profile');
                       },
                       text: 'Post',
@@ -143,6 +155,10 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                   ],
                 ),
               ),
+              //test
+              Text(_model.uploadedFileUrl1,
+              style: TextStyle(fontSize: 10,)),
+              //test
               if ((_model.uploadedFileUrl1 != '') ||
                   (_model.uploadedFileUrl2 != ''))
                 Padding(
@@ -188,6 +204,12 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                           if (selectedMedia != null &&
                               selectedMedia.every((m) =>
                                   validateFileFormat(m.storagePath, context))) {
+                                    //test
+                                    setState(() {
+                                      selecF = selectedMedia[0];
+                                      print(selecF);
+                                    });
+                                    //test
                             setState(() => _model.isDataUploading1 = true);
                             var selectedUploadedFiles = <FFUploadedFile>[];
 

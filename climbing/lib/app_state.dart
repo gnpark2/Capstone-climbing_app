@@ -70,6 +70,40 @@ class FFAppState extends ChangeNotifier {
     prefs.setStringList('ff_SavedPost', _SavedPost.map((x) => x.path).toList());
   }
 
+  List<GoogleMapDataStruct> _googleMapData = [
+    GoogleMapDataStruct.fromSerializableMap(jsonDecode(
+        '{\"latLng\":\"36,-115\",\"iconPath\":\"https://picsum.photos/seed/459/600\",\"title\":\"first\",\"discription\":\"test one\"}')),
+    GoogleMapDataStruct.fromSerializableMap(jsonDecode(
+        '{\"latLng\":\"36,-116\",\"iconPath\":\"https://picsum.photos/seed/451/600\",\"title\":\"test2\",\"discription\":\"test two\"}'))
+  ];
+  List<GoogleMapDataStruct> get googleMapData => _googleMapData;
+  set googleMapData(List<GoogleMapDataStruct> value) {
+    _googleMapData = value;
+  }
+
+  void addToGoogleMapData(GoogleMapDataStruct value) {
+    _googleMapData.add(value);
+  }
+
+  void removeFromGoogleMapData(GoogleMapDataStruct value) {
+    _googleMapData.remove(value);
+  }
+
+  void removeAtIndexFromGoogleMapData(int index) {
+    _googleMapData.removeAt(index);
+  }
+
+  void updateGoogleMapDataAtIndex(
+    int index,
+    GoogleMapDataStruct Function(GoogleMapDataStruct) updateFn,
+  ) {
+    _googleMapData[index] = updateFn(_googleMapData[index]);
+  }
+
+  void insertAtIndexInGoogleMapData(int index, GoogleMapDataStruct value) {
+    _googleMapData.insert(index, value);
+  }
+
   final _userDocQueryManager = FutureRequestManager<UsersRecord>();
   Future<UsersRecord> userDocQuery({
     String? uniqueQueryKey,
