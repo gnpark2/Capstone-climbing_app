@@ -37,6 +37,8 @@ class _TestPageWidgetState extends State<TestPageWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
+    final imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
+
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -47,17 +49,19 @@ class _TestPageWidgetState extends State<TestPageWidget> {
         body: SafeArea(
           top: true,
           child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(
-                width: MediaQuery.sizeOf(context).width * 1.0,
-                height: MediaQuery.sizeOf(context).height * 0.9,
-                child: const custom_widgets.showImageWidget(imagePath: '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png',),
-              ),
-            ],
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 1.0,
+                  height: MediaQuery.sizeOf(context).height * 0.9,
+                  child: imagePath.isNotEmpty
+                        ? custom_widgets.showImageWidget(imagePath: imagePath)
+                        : const Text('No Screenshot'),
+                ),
+              ],
+            ),
           ),
-        ),
         ),
       ),
     );
