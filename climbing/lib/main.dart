@@ -131,7 +131,6 @@ class _NavBarPageState extends State<NavBarPage> {
       'newfeed': const NewfeedWidget(),
       'chat_2_main': const Chat2MainWidget(),
       'findUser': const FindUserWidget(),
-      'TestPage': const TestPageWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
 
@@ -190,14 +189,6 @@ class _NavBarPageState extends State<NavBarPage> {
             label: 'Home',
             tooltip: '',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              size: 24.0,
-            ),
-            label: 'Home',
-            tooltip: '',
-          )
         ],
       ),
     );

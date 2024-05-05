@@ -46,26 +46,18 @@ class _TestPageWidgetState extends State<TestPageWidget> {
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
           top: true,
+          child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 1.0,
-                height: MediaQuery.sizeOf(context).height * 0.8,
-                child: custom_widgets.MarkedMapWidget(
-                  width: MediaQuery.sizeOf(context).width * 1.0,
-                  height: MediaQuery.sizeOf(context).height * 0.8,
-                  allowZoom: true,
-                  showLocation: false,
-                  showCompass: true,
-                  showMapToolbar: false,
-                  showTraffic: false,
-                  mapData: FFAppState().googleMapData,
-                  showZoomControls: true,
-                ),
+                height: MediaQuery.sizeOf(context).height * 0.9,
+                child: const custom_widgets.showImageWidget(imagePath: '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png',),
               ),
             ],
           ),
+        ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+/*
 // Automatic FlutterFlow imports
 import '/backend/backend.dart';
 import '/backend/schema/structs/index.dart';
@@ -8,209 +9,245 @@ import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 
-import 'dart:ui';
-import 'package:geolocator/geolocator.dart';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart'
-    as google_maps_flutter;
-import '/flutter_flow/lat_lng.dart' as latlng;
-import 'dart:async';
-export 'dart:async' show Completer;
-export 'package:google_maps_flutter/google_maps_flutter.dart' hide LatLng;
-export '/flutter_flow/lat_lng.dart' show LatLng;
-
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 // Set your widget name, define your parameter, and then add the
 // boilerplate code using the green button on the right!
 
-class MarkedMapWidget extends StatefulWidget {
-  const MarkedMapWidget({
+class showImageWidget extends StatefulWidget {
+  final String imagePath;
+
+  const showImageWidget({
     Key? key,
-    this.width,
-    this.height,
-    this.mapData,
-    this.allowZoom = true,
-    this.showZoomControls = true,
-    this.showLocation = true,
-    this.showCompass = false,
-    this.showMapToolbar = false,
-    this.showTraffic = false,
+    required this.imagePath,
   }) : super(key: key);
 
-  final double? width;
-  final double? height;
-  final List<GoogleMapDataStruct>? mapData;
-  final bool allowZoom;
-  final bool showZoomControls;
-  final bool showLocation;
-  final bool showCompass;
-  final bool showMapToolbar;
-  final bool showTraffic;
 
   @override
-  _MarkedMapWidgetState createState() => _MarkedMapWidgetState();
+  _showImageWidgetState createState() => _showImageWidgetState();
 }
 
-class _MarkedMapWidgetState extends State<MarkedMapWidget> {
-  final Completer<google_maps_flutter.GoogleMapController> _controller =
-      Completer();
-  final Map<String, google_maps_flutter.BitmapDescriptor> _customIcons = {};
-  Set<google_maps_flutter.Marker> _markers = {};
-
-  //late google_maps_flutter.LatLng _center;
-
-  google_maps_flutter.LatLng _center = google_maps_flutter.LatLng(0.0, 1.0);
+class _showImageWidgetState extends State<showImageWidget> {
 
   @override
   void initState() {
     super.initState();
-    //
-    _getCurrentLocation();
-    //
-    _loadMarkerIcons();
-  }
 
-  //
-  Future<void> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      _center = google_maps_flutter.LatLng(
-        position.latitude,
-        position.longitude,
-      );
-    });
-  }
-
-  //
-
-  Future<void> _loadMarkerIcons() async {
-    QuerySnapshot<Map<String, dynamic>> snapshot =
-        await FirebaseFirestore.instance.collection('users').get();
-
-    for (QueryDocumentSnapshot<Map<String, dynamic>> userSnapshot
-        in snapshot.docs) {
-      QuerySnapshot<Map<String, dynamic>> postSnapshot =
-          await userSnapshot.reference.collection('post').get();
-
-      for (QueryDocumentSnapshot<Map<String, dynamic>> postDoc
-          in postSnapshot.docs) {
-        String imagePath = postDoc.data()['post_photo'];
-
-        if (imagePath.isNotEmpty) {
-          if (imagePath.contains("https")) {
-            Uint8List? imageData = await loadNetworkImage(imagePath);
-            if (imageData != null) {
-              google_maps_flutter.BitmapDescriptor descriptor =
-                  google_maps_flutter.BitmapDescriptor.fromBytes(imageData);
-              _customIcons[imagePath] = descriptor;
-            }
-          } else {
-            google_maps_flutter.BitmapDescriptor descriptor =
-                await google_maps_flutter.BitmapDescriptor.fromAssetImage(
-              const ImageConfiguration(devicePixelRatio: 2.5),
-              "assets/images/$imagePath",
-            );
-            _customIcons[imagePath] = descriptor;
-          }
-        }
-      }
-    }
-
-    _updateMarkers(); // Update markers once icons are loaded
-  }
-
-  Future<Uint8List?> loadNetworkImage(String path) async {
-    final completer = Completer<ImageInfo>();
-    var image = NetworkImage(path);
-    image.resolve(const ImageConfiguration()).addListener(ImageStreamListener(
-        (ImageInfo info, bool _) => completer.complete(info)));
-    final imageInfo = await completer.future;
-    final byteData =
-        await imageInfo.image.toByteData(format: ImageByteFormat.png);
-    return byteData?.buffer.asUint8List();
-  }
-
-  void _updateMarkers() {
-    setState(() {
-      _markers = _createMarkers();
-    });
-  }
-
-  void _onMapCreated(google_maps_flutter.GoogleMapController controller) {
-    _controller.complete(controller);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: google_maps_flutter.GoogleMap(
-        onMapCreated: _onMapCreated,
-        zoomGesturesEnabled: widget.allowZoom,
-        zoomControlsEnabled: widget.showZoomControls,
-        myLocationEnabled: widget.showLocation,
-        compassEnabled: widget.showCompass,
-        mapToolbarEnabled: widget.showMapToolbar,
-        trafficEnabled: widget.showTraffic,
-        initialCameraPosition: google_maps_flutter.CameraPosition(
-          target: _center,
-          zoom: 11.0,
-        ),
-        markers: _markers,
+      appBar: AppBar(
+        title: Text('Captured Image'),
+      ),
+      body: Center(
+        child: Image.file(File(widget.imagePath)),
       ),
     );
   }
+}
+스크린샷 긁어오기까지 되는 코드*/
 
-  Set<google_maps_flutter.Marker> _createMarkers() {
-    var tmp = <google_maps_flutter.Marker>{};
+/*
+//나침반 추가. (asset에 나침반 이미지 필요.)
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import 'index.dart'; // Imports other custom widgets
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
+import 'package:flutter/material.dart';
+// Begin custom widget code
+// DO NOT REMOVE OR MODIFY THE CODE ABOVE!
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .get()
-        .then((QuerySnapshot<Map<String, dynamic>> snapshot) {
-      for (QueryDocumentSnapshot<Map<String, dynamic>> userSnapshot
-          in snapshot.docs) {
-        userSnapshot.reference
-            .collection('post')
-            .get()
-            .then((QuerySnapshot<Map<String, dynamic>> postSnapshot) {
-          for (QueryDocumentSnapshot<Map<String, dynamic>> postDoc
-              in postSnapshot.docs) {
-            String imagePath = postDoc.data()['post_photo'];
-            double latitude = postDoc.data()['latitude'];
-            double longitude = postDoc.data()['longitude'];
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_compass/flutter_compass.dart';
+// Set your widget name, define your parameter, and then add the
+// boilerplate code using the green button on the right!
 
-            if (latitude != null && longitude != null) {
-              google_maps_flutter.LatLng googleMapsLatLng =
-                  google_maps_flutter.LatLng(latitude, longitude);
+class showImageWidget extends StatefulWidget {
+  final String imagePath;
 
-              google_maps_flutter.BitmapDescriptor icon =
-                  _customIcons[imagePath] ??
-                      google_maps_flutter.BitmapDescriptor.defaultMarker;
+  const showImageWidget({
+    Key? key,
+    required this.imagePath,
+  }) : super(key: key);
 
-              final google_maps_flutter.Marker marker =
-                  google_maps_flutter.Marker(
-                markerId: google_maps_flutter.MarkerId(imagePath),
-                position: googleMapsLatLng,
-                icon: icon,
-                infoWindow: google_maps_flutter.InfoWindow(
-                  title: imagePath,
-                  snippet: 'Location: $latitude, $longitude',
-                ),
-              );
 
-              tmp.add(marker);
-            }
-            setState(() {
-              _markers = tmp;
-            });
-          }
-        });
-      }
-    });
+  @override
+  _showImageWidgetState createState() => _showImageWidgetState();
+}
 
-    return tmp;
+class _showImageWidgetState extends State<showImageWidget> {
+  double _compassValue = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCompass();
+
+  }
+
+  @override
+  void dispose() {
+    _stopCompass();
+    super.dispose();
+  }
+
+  void _startCompass() {
+  FlutterCompass.events?.listen((CompassEvent? event) {
+    if (event != null) {
+      setState(() {
+        _compassValue = event.heading ?? 0.0;
+      });
+    }
+  });
+}
+
+void _stopCompass() {
+  FlutterCompass.events?.listen(null);
+}
+
+  @override
+    Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset : false,
+      appBar: AppBar(
+        title: Text('Captured Image'),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.file(File(widget.imagePath)),
+              SizedBox(height: 20),
+              Text(
+                'Compass Value: $_compassValue',
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+*/
+
+//나침반 추가. (asset에 나침반 이미지 필요.)
+import '/backend/backend.dart';
+import '/backend/schema/structs/index.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import 'index.dart'; // Imports other custom widgets
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
+import 'package:flutter/material.dart';
+// Begin custom widget code
+// DO NOT REMOVE OR MODIFY THE CODE ABOVE!
+import 'dart:io';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter_compass/flutter_compass.dart';
+
+import 'package:flutter/services.dart';
+// Set your widget name, define your parameter, and then add the
+// boilerplate code using the green button on the right!
+
+class showImageWidget extends StatefulWidget {
+  final String imagePath;
+
+  const showImageWidget({
+    Key? key,
+    required this.imagePath,
+  }) : super(key: key);
+
+
+  @override
+  _showImageWidgetState createState() => _showImageWidgetState();
+}
+
+class _showImageWidgetState extends State<showImageWidget> {
+  double _compassValue = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCompass();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    _stopCompass();
+    super.dispose();
+  }
+
+  void _startCompass() {
+  FlutterCompass.events?.listen((CompassEvent? event) {
+    if (event != null) {
+      setState(() {
+        _compassValue = event.heading ?? 0.0;
+      });
+    }
+  });
+}
+
+void _stopCompass() {
+  FlutterCompass.events?.listen(null);
+}
+
+  @override
+    Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Captured Image'),
+      ),
+      body: Stack(
+        children: [
+          Image.file(File(widget.imagePath),
+          fit: BoxFit.contain,
+          width: double.infinity,
+          height: double.infinity,
+          ),/*
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Text(
+            'Compass Value: $_compassValue',
+            style: TextStyle(fontSize: 20),
+            ),
+          ),*/
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: Transform.rotate(
+              angle: ((_compassValue ?? 0.0) * (3.14159 / 180) * -1),
+              child: Image.asset(
+                'assets/images/compass.png',
+                width: 100,
+                height: 100,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
