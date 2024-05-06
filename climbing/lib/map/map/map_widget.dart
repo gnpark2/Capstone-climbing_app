@@ -391,6 +391,10 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 
+import 'package:climbing/map/map_link_post/map_link_post_widget.dart';
+
+import '/backend/backend.dart';
+
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -490,11 +494,65 @@ class _MapWidgetState extends State<MapWidget> {
                 Expanded(
                   child:RepaintBoundary(
                     key: globalKey,
-                    child: FlutterFlowGoogleMap(
+                    child: StreamBuilder<List<PostRecord>>(
+                  stream: queryPostRecord(),
+                  builder: (context, snapshot) {
+                    // Customize what your widget looks like when it's loading.
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    List<PostRecord> googleMapPostRecordList = snapshot.data!;
+                    return FlutterFlowGoogleMap(
                       controller: _model.googleMapsController,
                       onCameraIdle: (latLng) => _model.googleMapsCenter = latLng,
                       initialLocation: _model.googleMapsCenter ??=
                           currentUserLocationValue!,
+                      markers: googleMapPostRecordList
+                      .map((e) => e.latlng)
+                      .withoutNulls
+                      .toList()
+                      .map(
+                        (marker) => FlutterFlowMarker(
+                          marker.serialize(),
+                          marker,
+                          () async {
+                            await showModalBottomSheet(
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              enableDrag: false,
+                              context: context,
+                              builder: (context) {
+                                final clickedPostRecord = googleMapPostRecordList.firstWhere(
+                                  (postRecord) => postRecord.latlng == marker,
+                                );
+                                return GestureDetector(
+                                  onTap: () => _model
+                                          .unfocusNode.canRequestFocus
+                                      ? FocusScope.of(context)
+                                          .requestFocus(_model.unfocusNode)
+                                      : FocusScope.of(context).unfocus(),
+                                  child: Padding(
+                                    padding:
+                                        MediaQuery.viewInsetsOf(context),
+                                    child: MapLinkPostWidget(
+                                      upPost: clickedPostRecord,//클릭한 marker의 latlng를 가진 googleMapPostRecordList,
+                                    )
+                                  )
+                                );
+                              }
+                            );
+                          }),
+                      ).toList(),
                       markerColor: GoogleMarkerColor.red,
                       mapType: MapType.normal,
                       style: GoogleMapStyle.standard,
@@ -507,9 +565,11 @@ class _MapWidgetState extends State<MapWidget> {
                       showMapToolbar: false,
                       showTraffic: false,
                       centerMapOnMarkerTap: true,
-                      ),
+                      );
+                  },
                     ),
                   ),
+                ),
                 ],
               ),
               Positioned(

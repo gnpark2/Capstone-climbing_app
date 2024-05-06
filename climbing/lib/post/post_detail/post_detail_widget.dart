@@ -79,46 +79,188 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
               top: true,
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(15.0, 0.0, 15.0, 0.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
+                child: StreamBuilder<UsersRecord>(
+                  stream:
+                      UsersRecord.getDocument(postDetailPostRecord.postUser!),
+                  builder: (context, snapshot) {
+                    // Customize what your widget looks like when it's loading.
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              FlutterFlowTheme.of(context).primary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    final columnUsersRecord = snapshot.data!;
+                    return Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 16.0, 0.0, 0.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsetsDirectional.fromSTEB(
+                                        0.0, 0.0, 10.0, 0.0),
+                                    child: FlutterFlowIconButton(
+                                      borderRadius: 20.0,
+                                      borderWidth: 1.0,
+                                      buttonSize: 40.0,
+                                      icon: FaIcon(
+                                        FontAwesomeIcons.angleLeft,
+                                        color: FlutterFlowTheme.of(context)
+                                            .primaryText,
+                                        size: 24.0,
+                                      ),
+                                      onPressed: () async {
+                                        context.safePop();
+                                      },
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        dateTimeFormat('MMMEd',
+                                            postDetailPostRecord.timePosted!),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              letterSpacing: 0.0,
+                                            ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 5.0, 0.0, 0.0),
+                                        child: Text(
+                                          postDetailPostRecord.postTitle
+                                              .maybeHandleOverflow(
+                                            maxChars: 25,
+                                            replacement: '…',
+                                          ),
+                                          style: FlutterFlowTheme.of(context)
+                                              .bodyMedium
+                                              .override(
+                                                fontFamily: 'Readex Pro',
+                                                letterSpacing: 0.0,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              if (postDetailPostRecord.postUser?.id !=
+                                  currentUserUid)
+                                ToggleIcon(
+                                  onPressed: () async {
+                                    setState(
+                                      () => FFAppState().SavedPost.contains(
+                                              postDetailPostRecord.reference)
+                                          ? FFAppState().removeFromSavedPost(
+                                              postDetailPostRecord.reference)
+                                          : FFAppState().addToSavedPost(
+                                              postDetailPostRecord.reference),
+                                    );
+                                  },
+                                  value: FFAppState()
+                                      .SavedPost
+                                      .contains(postDetailPostRecord.reference),
+                                  onIcon: FaIcon(
+                                    FontAwesomeIcons.solidBookmark,
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    size: 25.0,
+                                  ),
+                                  offIcon: FaIcon(
+                                    FontAwesomeIcons.bookmark,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 25.0,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 20.0, 0.0, 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              postDetailPostRecord.postPhoto,
+                              width: MediaQuery.sizeOf(context).width * 0.95,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0.0, 15.0, 0.0, 15.0),
+                          child: Row(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0.0, 0.0, 10.0, 0.0),
-                                child: FlutterFlowIconButton(
-                                  borderRadius: 20.0,
-                                  borderWidth: 1.0,
-                                  buttonSize: 40.0,
-                                  icon: FaIcon(
-                                    FontAwesomeIcons.angleLeft,
-                                    color: FlutterFlowTheme.of(context)
-                                        .primaryText,
-                                    size: 24.0,
-                                  ),
-                                  onPressed: () async {
-                                    context.safePop();
-                                  },
-                                ),
-                              ),
-                              Column(
+                              Row(
                                 mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  ToggleIcon(
+                                    onPressed: () async {
+                                      final postLikedByElement =
+                                          currentUserReference;
+                                      final postLikedByUpdate =
+                                          postDetailPostRecord
+                                                  .postLikedBy
+                                                  .contains(postLikedByElement)
+                                              ? FieldValue.arrayRemove(
+                                                  [postLikedByElement])
+                                              : FieldValue.arrayUnion(
+                                                  [postLikedByElement]);
+                                      await postDetailPostRecord.reference
+                                          .update({
+                                        ...mapToFirestore(
+                                          {
+                                            'Post_liked_by': postLikedByUpdate,
+                                          },
+                                        ),
+                                      });
+                                    },
+                                    value: postDetailPostRecord.postLikedBy
+                                        .contains(currentUserReference),
+                                    onIcon: const Icon(
+                                      Icons.favorite,
+                                      color: Color(0xFFFF0010),
+                                      size: 25.0,
+                                    ),
+                                    offIcon: Icon(
+                                      Icons.favorite_border,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 25.0,
+                                    ),
+                                  ),
                                   Text(
-                                    dateTimeFormat('MMMEd',
-                                        postDetailPostRecord.timePosted!),
+                                    formatNumber(
+                                      postDetailPostRecord.postLikedBy.length,
+                                      formatType: FormatType.compact,
+                                    ),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -126,298 +268,212 @@ class _PostDetailWidgetState extends State<PostDetailWidget> {
                                           letterSpacing: 0.0,
                                         ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 5.0, 0.0, 0.0),
-                                    child: Text(
-                                      postDetailPostRecord.postTitle
-                                          .maybeHandleOverflow(
-                                        maxChars: 25,
-                                        replacement: '…',
-                                      ),
-                                      style: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            letterSpacing: 0.0,
-                                          ),
-                                    ),
-                                  ),
                                 ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    30.0, 0.0, 0.0, 0.0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        await showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          backgroundColor: Colors.transparent,
+                                          enableDrag: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return GestureDetector(
+                                              onTap: () => _model.unfocusNode
+                                                      .canRequestFocus
+                                                  ? FocusScope.of(context)
+                                                      .requestFocus(
+                                                          _model.unfocusNode)
+                                                  : FocusScope.of(context)
+                                                      .unfocus(),
+                                              child: Padding(
+                                                padding:
+                                                    MediaQuery.viewInsetsOf(
+                                                        context),
+                                                child: CommentWidget(
+                                                  commentparameter:
+                                                      postDetailPostRecord,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ).then((value) => safeSetState(() {}));
+                                      },
+                                      child: Icon(
+                                        Icons.mode_comment_outlined,
+                                        color: FlutterFlowTheme.of(context)
+                                            .secondary,
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsetsDirectional.fromSTEB(
+                                          5.0, 0.0, 0.0, 0.0),
+                                      child:
+                                          StreamBuilder<List<CommentsRecord>>(
+                                        stream: queryCommentsRecord(
+                                          queryBuilder: (commentsRecord) =>
+                                              commentsRecord.where(
+                                            'post_type',
+                                            isEqualTo:
+                                                postDetailPostRecord.reference,
+                                          ),
+                                        ),
+                                        builder: (context, snapshot) {
+                                          // Customize what your widget looks like when it's loading.
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: SizedBox(
+                                                width: 50.0,
+                                                height: 50.0,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    FlutterFlowTheme.of(context)
+                                                        .primary,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          List<CommentsRecord>
+                                              textCommentsRecordList =
+                                              snapshot.data!;
+                                          return Text(
+                                            formatNumber(
+                                              textCommentsRecordList.length,
+                                              formatType: FormatType.compact,
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodyMedium
+                                                .override(
+                                                  fontFamily: 'Readex Pro',
+                                                  letterSpacing: 0.0,
+                                                ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          if (postDetailPostRecord.postUser?.id !=
-                              currentUserUid)
-                            ToggleIcon(
-                              onPressed: () async {
-                                setState(
-                                  () => FFAppState().SavedPost.contains(
-                                          postDetailPostRecord.reference)
-                                      ? FFAppState().removeFromSavedPost(
-                                          postDetailPostRecord.reference)
-                                      : FFAppState().addToSavedPost(
-                                          postDetailPostRecord.reference),
-                                );
-                              },
-                              value: FFAppState()
-                                  .SavedPost
-                                  .contains(postDetailPostRecord.reference),
-                              onIcon: FaIcon(
-                                FontAwesomeIcons.solidBookmark,
-                                color: FlutterFlowTheme.of(context).primary,
-                                size: 25.0,
-                              ),
-                              offIcon: FaIcon(
-                                FontAwesomeIcons.bookmark,
-                                color:
-                                    FlutterFlowTheme.of(context).secondaryText,
-                                size: 25.0,
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 5.0, 0.0),
+                              child: StreamBuilder<UsersRecord>(
+                                stream: UsersRecord.getDocument(
+                                    widget.postdet!.postUser!),
+                                builder: (context, snapshot) {
+                                  // Customize what your widget looks like when it's loading.
+                                  if (!snapshot.hasData) {
+                                    return Center(
+                                      child: SizedBox(
+                                        width: 50.0,
+                                        height: 50.0,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            FlutterFlowTheme.of(context)
+                                                .primary,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  final circleImageUsersRecord = snapshot.data!;
+                                  return InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        'otherUserProfile',
+                                        queryParameters: {
+                                          'userss': serializeParam(
+                                            circleImageUsersRecord,
+                                            ParamType.Document,
+                                          ),
+                                        }.withoutNulls,
+                                        extra: <String, dynamic>{
+                                          'userss': circleImageUsersRecord,
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.network(
+                                        circleImageUsersRecord.photoUrl,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 20.0, 0.0, 0.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                          postDetailPostRecord.postPhoto,
-                          width: MediaQuery.sizeOf(context).width * 0.95,
-                          height: 200.0,
-                          fit: BoxFit.cover,
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  columnUsersRecord.displayName,
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Readex Pro',
+                                        fontSize: 18.0,
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(0.0, 15.0, 0.0, 15.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              16.0, 16.0, 16.0, 16.0),
+                          child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              ToggleIcon(
-                                onPressed: () async {
-                                  final postLikedByElement =
-                                      currentUserReference;
-                                  final postLikedByUpdate = postDetailPostRecord
-                                          .postLikedBy
-                                          .contains(postLikedByElement)
-                                      ? FieldValue.arrayRemove(
-                                          [postLikedByElement])
-                                      : FieldValue.arrayUnion(
-                                          [postLikedByElement]);
-                                  await postDetailPostRecord.reference.update({
-                                    ...mapToFirestore(
-                                      {
-                                        'Post_liked_by': postLikedByUpdate,
-                                      },
-                                    ),
-                                  });
-                                },
-                                value: postDetailPostRecord.postLikedBy
-                                    .contains(currentUserReference),
-                                onIcon: const Icon(
-                                  Icons.favorite,
-                                  color: Color(0xFFFF0010),
-                                  size: 25.0,
-                                ),
-                                offIcon: Icon(
-                                  Icons.favorite_border,
-                                  color: FlutterFlowTheme.of(context)
-                                      .secondaryText,
-                                  size: 25.0,
-                                ),
-                              ),
                               Text(
-                                formatNumber(
-                                  postDetailPostRecord.postLikedBy.length,
-                                  formatType: FormatType.compact,
-                                ),
+                                postDetailPostRecord.postDescription,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
                                       fontFamily: 'Readex Pro',
+                                      fontSize: 16.0,
                                       letterSpacing: 0.0,
                                     ),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                30.0, 0.0, 0.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    await showModalBottomSheet(
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      enableDrag: false,
-                                      context: context,
-                                      builder: (context) {
-                                        return GestureDetector(
-                                          onTap: () => _model
-                                                  .unfocusNode.canRequestFocus
-                                              ? FocusScope.of(context)
-                                                  .requestFocus(
-                                                      _model.unfocusNode)
-                                              : FocusScope.of(context)
-                                                  .unfocus(),
-                                          child: Padding(
-                                            padding: MediaQuery.viewInsetsOf(
-                                                context),
-                                            child: CommentWidget(
-                                              commentparameter:
-                                                  postDetailPostRecord,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ).then((value) => safeSetState(() {}));
-                                  },
-                                  child: Icon(
-                                    Icons.mode_comment_outlined,
-                                    color:
-                                        FlutterFlowTheme.of(context).secondary,
-                                    size: 24.0,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      5.0, 0.0, 0.0, 0.0),
-                                  child: StreamBuilder<List<CommentsRecord>>(
-                                    stream: queryCommentsRecord(
-                                      queryBuilder: (commentsRecord) =>
-                                          commentsRecord.where(
-                                        'post_type',
-                                        isEqualTo:
-                                            postDetailPostRecord.reference,
-                                      ),
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                FlutterFlowTheme.of(context)
-                                                    .primary,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      List<CommentsRecord>
-                                          textCommentsRecordList =
-                                          snapshot.data!;
-                                      return Text(
-                                        formatNumber(
-                                          textCommentsRecordList.length,
-                                          formatType: FormatType.compact,
-                                        ),
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Readex Pro',
-                                              letterSpacing: 0.0,
-                                            ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 5.0, 0.0),
-                          child: StreamBuilder<UsersRecord>(
-                            stream: UsersRecord.getDocument(
-                                widget.postdet!.postUser!),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        FlutterFlowTheme.of(context).primary,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-                              final circleImageUsersRecord = snapshot.data!;
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                focusColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () async {
-                                  context.pushNamed(
-                                    'otherUserProfile',
-                                    queryParameters: {
-                                      'userss': serializeParam(
-                                        circleImageUsersRecord,
-                                        ParamType.Document,
-                                      ),
-                                    }.withoutNulls,
-                                    extra: <String, dynamic>{
-                                      'userss': circleImageUsersRecord,
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.network(
-                                    circleImageUsersRecord.photoUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Text(
-                          postDetailPostRecord.postDescription,
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Readex Pro',
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                  ),
                         ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ),

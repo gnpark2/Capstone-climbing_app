@@ -92,140 +92,126 @@ class _MapLinkPostWidgetState extends State<MapLinkPostWidget> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
-                  width: 60.0,
-                  child: Divider(
-                    thickness: 3.0,
-                    color: FlutterFlowTheme.of(context).alternate,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 10.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        valueOrDefault<String>(
-                          widget.upPost?.postTitle,
-                          'Post_title',
+            child: StreamBuilder<UsersRecord>(
+              stream: UsersRecord.getDocument(widget.upPost!.postUser!),
+              builder: (context, snapshot) {
+                // Customize what your widget looks like when it's loading.
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SizedBox(
+                      width: 50.0,
+                      height: 50.0,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          FlutterFlowTheme.of(context).primary,
                         ),
-                        style: FlutterFlowTheme.of(context).bodyLarge.override(
-                              fontFamily: 'Readex Pro',
-                              fontSize: 18.0,
-                              letterSpacing: 0.0,
-                            ),
                       ),
-                      if (bottomSheetEditPostRecord.postUser?.id !=
-                          currentUserUid)
-                        ToggleIcon(
-                          onPressed: () async {
-                            setState(
-                              () => FFAppState().SavedPost.contains(
-                                      bottomSheetEditPostRecord.reference)
-                                  ? FFAppState().removeFromSavedPost(
-                                      bottomSheetEditPostRecord.reference)
-                                  : FFAppState().addToSavedPost(
-                                      bottomSheetEditPostRecord.reference),
-                            );
-                          },
-                          value: FFAppState()
-                              .SavedPost
-                              .contains(bottomSheetEditPostRecord.reference),
-                          onIcon: FaIcon(
-                            FontAwesomeIcons.solidBookmark,
-                            color: FlutterFlowTheme.of(context).primary,
-                            size: 25.0,
-                          ),
-                          offIcon: FaIcon(
-                            FontAwesomeIcons.bookmark,
-                            color: FlutterFlowTheme.of(context).secondaryText,
-                            size: 25.0,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      widget.upPost!.postPhoto,
-                      width: 430.0,
-                      height: 200.0,
-                      fit: BoxFit.cover,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 5.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        valueOrDefault<String>(
-                          widget.upPost?.postUser?.id,
-                          'post_user',
-                        ),
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Readex Pro',
-                              letterSpacing: 0.0,
-                            ),
+                  );
+                }
+                final columnUsersRecord = snapshot.data!;
+                return Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    SizedBox(
+                      width: 60.0,
+                      child: Divider(
+                        thickness: 3.0,
+                        color: FlutterFlowTheme.of(context).alternate,
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          10.0, 10.0, 10.0, 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            valueOrDefault<String>(
+                              bottomSheetEditPostRecord.postTitle,
+                              'No title',
+                            ),
+                            style:
+                                FlutterFlowTheme.of(context).bodyLarge.override(
+                                      fontFamily: 'Readex Pro',
+                                      fontSize: 18.0,
+                                      letterSpacing: 0.0,
+                                    ),
+                          ),
+                          if (bottomSheetEditPostRecord.postUser?.id !=
+                              currentUserUid)
+                            ToggleIcon(
+                              onPressed: () async {
+                                setState(
+                                  () => FFAppState().SavedPost.contains(
+                                          bottomSheetEditPostRecord.reference)
+                                      ? FFAppState().removeFromSavedPost(
+                                          bottomSheetEditPostRecord.reference)
+                                      : FFAppState().addToSavedPost(
+                                          bottomSheetEditPostRecord.reference),
+                                );
+                              },
+                              value: FFAppState().SavedPost.contains(
+                                  bottomSheetEditPostRecord.reference),
+                              onIcon: FaIcon(
+                                FontAwesomeIcons.solidBookmark,
+                                color: FlutterFlowTheme.of(context).primary,
+                                size: 25.0,
+                              ),
+                              offIcon: FaIcon(
+                                FontAwesomeIcons.bookmark,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                size: 25.0,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 0.0),
+                      child: InkWell(
+                        splashColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () async {
+                          context.pushNamed(
+                            'postDetail',
+                            queryParameters: {
+                              'postdet': serializeParam(
+                                bottomSheetEditPostRecord,
+                                ParamType.Document,
+                              ),
+                            }.withoutNulls,
+                            extra: <String, dynamic>{
+                              'postdet': bottomSheetEditPostRecord,
+                            },
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            bottomSheetEditPostRecord.postPhoto,
+                            width: 430.0,
+                            height: 200.0,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(10.0, 10.0, 10.0, 5.0),
+                      child: Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          ToggleIcon(
-                            onPressed: () async {
-                              final postLikedByElement = currentUserReference;
-                              final postLikedByUpdate =
-                                  bottomSheetEditPostRecord.postLikedBy
-                                          .contains(postLikedByElement)
-                                      ? FieldValue.arrayRemove(
-                                          [postLikedByElement])
-                                      : FieldValue.arrayUnion(
-                                          [postLikedByElement]);
-                              await bottomSheetEditPostRecord.reference.update({
-                                ...mapToFirestore(
-                                  {
-                                    'Post_liked_by': postLikedByUpdate,
-                                  },
-                                ),
-                              });
-                            },
-                            value: bottomSheetEditPostRecord.postLikedBy
-                                .contains(currentUserReference),
-                            onIcon: const Icon(
-                              Icons.favorite,
-                              color: Color(0xFFFF0010),
-                              size: 25.0,
-                            ),
-                            offIcon: Icon(
-                              Icons.favorite_border,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 25.0,
-                            ),
-                          ),
                           Text(
-                            formatNumber(
-                              bottomSheetEditPostRecord.postLikedBy.length,
-                              formatType: FormatType.compact,
+                            valueOrDefault<String>(
+                              columnUsersRecord.displayName,
+                              'ghost_user',
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
@@ -236,93 +222,157 @@ class _MapLinkPostWidgetState extends State<MapLinkPostWidget> {
                           ),
                         ],
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(30.0, 0.0, 0.0, 0.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                await showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  enableDrag: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return Padding(
-                                      padding: MediaQuery.viewInsetsOf(context),
-                                      child: CommentWidget(
-                                        commentparameter:
-                                            bottomSheetEditPostRecord,
-                                      ),
-                                    );
-                                  },
-                                ).then((value) => safeSetState(() {}));
-                              },
-                              child: Icon(
-                                Icons.mode_comment_outlined,
-                                color: FlutterFlowTheme.of(context).secondary,
-                                size: 24.0,
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 20.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              ToggleIcon(
+                                onPressed: () async {
+                                  final postLikedByElement =
+                                      currentUserReference;
+                                  final postLikedByUpdate =
+                                      bottomSheetEditPostRecord.postLikedBy
+                                              .contains(postLikedByElement)
+                                          ? FieldValue.arrayRemove(
+                                              [postLikedByElement])
+                                          : FieldValue.arrayUnion(
+                                              [postLikedByElement]);
+                                  await bottomSheetEditPostRecord.reference
+                                      .update({
+                                    ...mapToFirestore(
+                                      {
+                                        'Post_liked_by': postLikedByUpdate,
+                                      },
+                                    ),
+                                  });
+                                },
+                                value: bottomSheetEditPostRecord.postLikedBy
+                                    .contains(currentUserReference),
+                                onIcon: const Icon(
+                                  Icons.favorite,
+                                  color: Color(0xFFFF0010),
+                                  size: 25.0,
+                                ),
+                                offIcon: Icon(
+                                  Icons.favorite_border,
+                                  color: FlutterFlowTheme.of(context)
+                                      .secondaryText,
+                                  size: 25.0,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  5.0, 0.0, 0.0, 0.0),
-                              child: StreamBuilder<List<CommentsRecord>>(
-                                stream: queryCommentsRecord(
-                                  queryBuilder: (commentsRecord) =>
-                                      commentsRecord.where(
-                                    'post_type',
-                                    isEqualTo:
-                                        bottomSheetEditPostRecord.reference,
+                              Text(
+                                formatNumber(
+                                  bottomSheetEditPostRecord.postLikedBy.length,
+                                  formatType: FormatType.compact,
+                                ),
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Readex Pro',
+                                      letterSpacing: 0.0,
+                                    ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                30.0, 0.0, 0.0, 0.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    await showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      backgroundColor: Colors.transparent,
+                                      enableDrag: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return Padding(
+                                          padding:
+                                              MediaQuery.viewInsetsOf(context),
+                                          child: CommentWidget(
+                                            commentparameter:
+                                                bottomSheetEditPostRecord,
+                                          ),
+                                        );
+                                      },
+                                    ).then((value) => safeSetState(() {}));
+                                  },
+                                  child: Icon(
+                                    Icons.mode_comment_outlined,
+                                    color:
+                                        FlutterFlowTheme.of(context).secondary,
+                                    size: 24.0,
                                   ),
                                 ),
-                                builder: (context, snapshot) {
-                                  // Customize what your widget looks like when it's loading.
-                                  if (!snapshot.hasData) {
-                                    return Center(
-                                      child: SizedBox(
-                                        width: 50.0,
-                                        height: 50.0,
-                                        child: CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                            FlutterFlowTheme.of(context)
-                                                .primary,
-                                          ),
-                                        ),
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      5.0, 0.0, 0.0, 0.0),
+                                  child: StreamBuilder<List<CommentsRecord>>(
+                                    stream: queryCommentsRecord(
+                                      queryBuilder: (commentsRecord) =>
+                                          commentsRecord.where(
+                                        'post_type',
+                                        isEqualTo:
+                                            bottomSheetEditPostRecord.reference,
                                       ),
-                                    );
-                                  }
-                                  List<CommentsRecord> textCommentsRecordList =
-                                      snapshot.data!;
-                                  return Text(
-                                    formatNumber(
-                                      textCommentsRecordList.length,
-                                      formatType: FormatType.compact,
                                     ),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          letterSpacing: 0.0,
+                                    builder: (context, snapshot) {
+                                      // Customize what your widget looks like when it's loading.
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: SizedBox(
+                                            width: 50.0,
+                                            height: 50.0,
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                FlutterFlowTheme.of(context)
+                                                    .primary,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      List<CommentsRecord>
+                                          textCommentsRecordList =
+                                          snapshot.data!;
+                                      return Text(
+                                        formatNumber(
+                                          textCommentsRecordList.length,
+                                          formatType: FormatType.compact,
                                         ),
-                                  );
-                                },
-                              ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Readex Pro',
+                                              letterSpacing: 0.0,
+                                            ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         );

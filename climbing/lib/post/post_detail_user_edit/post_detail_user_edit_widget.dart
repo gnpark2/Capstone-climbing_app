@@ -117,7 +117,7 @@ class _PostDetailUserEditWidgetState extends State<PostDetailUserEditWidget> {
                                 await postDetailUserEditPostRecord.reference
                                     .delete();
 
-                                context.pushNamed('newfeed');
+                                context.pushNamed('profile');
                               },
                             ),
                             FlutterFlowIconButton(

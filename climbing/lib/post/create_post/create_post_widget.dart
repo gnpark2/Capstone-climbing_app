@@ -63,7 +63,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Text(
-            'Page Title',
+            'Create Post',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
                   color: Colors.white,
@@ -114,6 +114,9 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                     ),
                     FFButtonWidget(
                       onPressed: () async {
+                        if ((_model.textController1.text != '') &&
+                            ((_model.uploadedFileUrl1 != '') ||
+                                (_model.uploadedFileUrl2 != ''))) {
                         print(selecF.toString() + 'selecF값 입니다.');
                         LatLng? latLng = await functions.getLatLng(selecF);
 
@@ -129,6 +132,22 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                         print(latLng.toString() + '입니다.');
                         //test
                         context.pushNamed('profile');
+                      } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'you need to add a title or image.',
+                                style: TextStyle(
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: const Duration(milliseconds: 4000),
+                              backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
+                        }
                       },
                       text: 'Post',
                       options: FFButtonOptions(
@@ -204,12 +223,12 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                           if (selectedMedia != null &&
                               selectedMedia.every((m) =>
                                   validateFileFormat(m.storagePath, context))) {
-                                    //test
-                                    setState(() {
-                                      selecF = selectedMedia[0];
-                                      print(selecF);
-                                    });
-                                    //test
+                            //test
+                            setState(() {
+                              selecF = selectedMedia[0];
+                              print(selecF);
+                            });
+                            //test
                             setState(() => _model.isDataUploading1 = true);
                             var selectedUploadedFiles = <FFUploadedFile>[];
 
