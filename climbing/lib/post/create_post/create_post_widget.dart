@@ -1,5 +1,3 @@
-import 'package:climbing/flutter_flow/uploaded_file.dart';
-
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/backend/firebase_storage/storage.dart';
@@ -23,9 +21,6 @@ class CreatePostWidget extends StatefulWidget {
 
 class _CreatePostWidgetState extends State<CreatePostWidget> {
   late CreatePostModel _model;
-  //test
-  late SelectedFile selecF;
-  //test
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -63,7 +58,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
           backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Text(
-            'Create Post',
+            'Page Title',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
                   fontFamily: 'Outfit',
                   color: Colors.white,
@@ -117,22 +112,17 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                         if ((_model.textController1.text != '') &&
                             ((_model.uploadedFileUrl1 != '') ||
                                 (_model.uploadedFileUrl2 != ''))) {
-                        print(selecF.toString() + 'selecF값 입니다.');
-                        LatLng? latLng = await functions.getLatLng(selecF);
+                          await PostRecord.createDoc(currentUserReference!)
+                              .set(createPostRecordData(
+                            postDescription: _model.textController2.text,
+                            postUser: currentUserReference,
+                            timePosted: getCurrentTimestamp,
+                            postPhoto: _model.uploadedFileUrl1,
+                            latlng: functions.getLatLng(),
+                          ));
 
-                        await PostRecord.createDoc(currentUserReference!)
-                            .set(createPostRecordData(
-                          postDescription: _model.textController2.text,
-                          postUser: currentUserReference,
-                          timePosted: getCurrentTimestamp,
-                          postPhoto: _model.uploadedFileUrl1,
-                          latlng: latLng,
-                        ));
-                        //test
-                        print(latLng.toString() + '입니다.');
-                        //test
-                        context.pushNamed('profile');
-                      } else {
+                          context.pushNamed('profile');
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
@@ -174,10 +164,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                   ],
                 ),
               ),
-              //test
-              Text(_model.uploadedFileUrl1,
-              style: TextStyle(fontSize: 10,)),
-              //test
               if ((_model.uploadedFileUrl1 != '') ||
                   (_model.uploadedFileUrl2 != ''))
                 Padding(
@@ -223,12 +209,6 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                           if (selectedMedia != null &&
                               selectedMedia.every((m) =>
                                   validateFileFormat(m.storagePath, context))) {
-                            //test
-                            setState(() {
-                              selecF = selectedMedia[0];
-                              print(selecF);
-                            });
-                            //test
                             setState(() => _model.isDataUploading1 = true);
                             var selectedUploadedFiles = <FFUploadedFile>[];
 

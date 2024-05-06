@@ -163,7 +163,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                         color: FlutterFlowTheme.of(context).primaryText,
                         size: 32.0,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         context.pushNamed('TestPage');
                       },
                     ),

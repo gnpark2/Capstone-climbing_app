@@ -1,1 +1,1 @@
-export 'marked_map_widget.dart' show showImageWidget;
+export 'marked_map_widget.dart' show MarkedMapWidget;

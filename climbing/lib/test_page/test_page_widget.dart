@@ -1,7 +1,9 @@
+import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'test_page_model.dart';
 export 'test_page_model.dart';
@@ -37,8 +39,6 @@ class _TestPageWidgetState extends State<TestPageWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    final imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
-
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -48,19 +48,43 @@ class _TestPageWidgetState extends State<TestPageWidget> {
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         body: SafeArea(
           top: true,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  FlutterFlowIconButton(
+                    borderRadius: 20.0,
+                    borderWidth: 1.0,
+                    buttonSize: 40.0,
+                    icon: FaIcon(
+                      FontAwesomeIcons.angleLeft,
+                      color: FlutterFlowTheme.of(context).primaryText,
+                      size: 24.0,
+                    ),
+                    onPressed: () async {
+                      context.safePop();
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width * 1.0,
+                height: MediaQuery.sizeOf(context).height * 0.8,
+                child: custom_widgets.MarkedMapWidget(
                   width: MediaQuery.sizeOf(context).width * 1.0,
-                  height: MediaQuery.sizeOf(context).height * 0.9,
-                  child: imagePath.isNotEmpty
-                        ? custom_widgets.showImageWidget(imagePath: imagePath)
-                        : const Text('No Screenshot'),
+                  height: MediaQuery.sizeOf(context).height * 0.8,
+                  allowZoom: true,
+                  showLocation: false,
+                  showCompass: true,
+                  showMapToolbar: false,
+                  showTraffic: false,
+                  mapData: FFAppState().googleMapData,
+                  showZoomControls: true,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
