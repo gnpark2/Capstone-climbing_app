@@ -120,6 +120,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
 
                         await PostRecord.createDoc(currentUserReference!)
                             .set(createPostRecordData(
+                          postTitle: _model.textController1.text,
                           postDescription: _model.textController2.text,
                           postUser: currentUserReference,
                           timePosted: getCurrentTimestamp,
