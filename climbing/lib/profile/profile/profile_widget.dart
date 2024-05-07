@@ -118,7 +118,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           await authManager.signOut();
                           GoRouter.of(context).clearRedirectLocation();
 
-                          context.goNamedAuth('SignInAndUp', context.mounted);
+                          context.goNamedAuth('SignInAndUp', context.mounted);//여기까지는 잘 넘어감.
                         },
                       ),
                     ),

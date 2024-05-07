@@ -89,7 +89,8 @@ class _NewfeedWidgetState extends State<NewfeedWidget> {
                   ],
                 ),
               ),
-              StreamBuilder<List<PostRecord>>(
+              Flexible(
+              child: StreamBuilder<List<PostRecord>>(
                 stream: queryPostRecord(
                   queryBuilder: (postRecord) =>
                       postRecord.orderBy('time_posted', descending: true),
@@ -451,6 +452,7 @@ class _NewfeedWidgetState extends State<NewfeedWidget> {
                     },
                   );
                 },
+              ),
               ),
             ],
           ),

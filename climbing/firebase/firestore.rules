@@ -4,14 +4,14 @@ service cloud.firestore {
     match /users/{document} {
       allow create: if true;
       allow read: if request.auth != null;
-      allow write: if request.auth.uid == resource.data.uid;
-      allow delete: if request.auth.uid == resource.data.uid;
+      allow write: if request.auth != null;
+      allow delete: if request.auth.uid == document;
     }
 
     match /users/{parent}/post/{document} {
       allow create: if request.auth != null;
       allow read: if request.auth != null;
-      allow write: if resource.data.post_user == /databases/$(database)/documents/users/$(request.auth.uid);
+      allow write: if request.auth != null;
       allow delete: if resource.data.post_user == /databases/$(database)/documents/users/$(request.auth.uid);
     }
 
@@ -23,7 +23,7 @@ service cloud.firestore {
     match /comments/{document} {
       allow create: if request.auth != null;
       allow read: if request.auth != null;
-      allow write: if resource.data.comment_user == /databases/$(database)/documents/users/$(request.auth.uid);
+      allow write: if request.auth != null;
       allow delete: if resource.data.comment_user == /databases/$(database)/documents/users/$(request.auth.uid);
     }
 

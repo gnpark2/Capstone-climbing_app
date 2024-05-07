@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '/account/resendemail/resendemail_widget.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
@@ -163,8 +165,26 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                         color: FlutterFlowTheme.of(context).primaryText,
                         size: 32.0,
                       ),
-                      onPressed: () async {
-                        context.pushNamed('TestPage');
+                      onPressed: () {
+                        final imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
+
+                        File(imagePath).existsSync()
+                        ? context.pushNamed('TestPage')
+                        : ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "you don't have screenshot of Map.",
+                              style: TextStyle(
+                                color:
+                                    FlutterFlowTheme.of(context).primaryText,
+                              ),
+                            ),
+                            duration: const Duration(milliseconds: 4000),
+                            backgroundColor:
+                                  FlutterFlowTheme.of(context).secondary,
+                          )
+                        );
+                        
                       },
                     ),
                   ],

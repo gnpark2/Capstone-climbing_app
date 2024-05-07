@@ -16,4 +16,14 @@ exports.onUserDeleted = functions.auth.user().onDelete(async (user) => {
       }
     });
   await firestore.collection("users").doc(user.uid).delete();
+  await firestore
+    .collection("comments")
+    .where("comment_user", "==", userRef)
+    .get()
+    .then(async (querySnapshot) => {
+      for (var doc of querySnapshot.docs) {
+        console.log(`Deleting document ${doc.id} from collection comments`);
+        await doc.ref.delete();
+      }
+    });
 });

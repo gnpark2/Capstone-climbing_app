@@ -84,7 +84,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         ),
         FFRoute(
           name: 'SignInAndUp',
-          path: '/signInAndUp',
+          path: '/SignInAndUp',
           builder: (context, params) => const SignInAndUpWidget(),
         ),
         FFRoute(
@@ -453,7 +453,7 @@ class FFRoute {
 
           if (requireAuth && !appStateNotifier.loggedIn) {
             appStateNotifier.setRedirectLocationIfUnset(state.uri.toString());
-            return '/signInAndUp';
+            return '/SignInAndUp';
           }
           return null;
         },
