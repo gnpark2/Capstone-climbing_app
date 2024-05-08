@@ -1009,20 +1009,20 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
   }
 
   Future<void> requestPermissions() async {
-  Map<Permission, PermissionStatus> statuses = await [
-    Permission.accessMediaLocation,
-    Permission.location,
-  ].request();
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.accessMediaLocation,
+      Permission.location,
+    ].request();
 
-  if (statuses[Permission.accessMediaLocation]!.isGranted &&
-      statuses[Permission.location]!.isGranted) {
-    print("권한이 허용되었습니다.");
-    // 위치 정보를 포함한 사진 접근 로직 추가
-  } else {
-    print("필요한 권한이 거부되었습니다.");
-    // 권한 거부 처리 로직 추가
+    if (statuses[Permission.accessMediaLocation]!.isGranted &&
+        statuses[Permission.location]!.isGranted) {
+      print("권한이 허용되었습니다.");
+      // 위치 정보를 포함한 사진 접근 로직 추가
+    } else {
+      print("필요한 권한이 거부되었습니다.");
+      // 권한 거부 처리 로직 추가
+    }
   }
-}
 
   @override
   void dispose() {
