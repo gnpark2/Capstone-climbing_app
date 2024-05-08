@@ -387,6 +387,16 @@ class _MapWidgetState extends State<MapWidget> {
 }
 */
 
+
+
+
+
+
+
+
+
+// 정상 코드. 하지만 post가 하나만 지도에 표시
+
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
@@ -636,6 +646,24 @@ class _MapWidgetState extends State<MapWidget> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* 사용자의 위치가 로드 다 된 후, 지도 로드
 import 'dart:async';
 import 'dart:io';
