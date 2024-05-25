@@ -7,7 +7,6 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'other_user_profile_model.dart';
 export 'other_user_profile_model.dart';
 
@@ -97,30 +96,6 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                           ),
                           onPressed: () async {
                             context.safePop();
-                          },
-                        ),
-                        FlutterFlowIconButton(
-                          borderRadius: 20.0,
-                          borderWidth: 1.0,
-                          buttonSize: 40.0,
-                          icon: FaIcon(
-                            FontAwesomeIcons.locationArrow,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 24.0,
-                          ),
-                          onPressed: () async {
-                            context.pushNamed(
-                              'chat_2_Details',
-                              queryParameters: {
-                                'chatRef': serializeParam(
-                                  widget.chatsss,
-                                  ParamType.Document,
-                                ),
-                              }.withoutNulls,
-                              extra: <String, dynamic>{
-                                'chatRef': widget.chatsss,
-                              },
-                            );
                           },
                         ),
                       ],
