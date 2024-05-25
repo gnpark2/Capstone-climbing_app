@@ -440,6 +440,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                           mainAxisSpacing: 10.0,
                           itemCount: staggeredViewPostRecordList.length,
                           shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(), // Disable the grid view scrolling
                           itemBuilder: (context, staggeredViewIndex) {
                             final staggeredViewPostRecord =
                                 staggeredViewPostRecordList[staggeredViewIndex];

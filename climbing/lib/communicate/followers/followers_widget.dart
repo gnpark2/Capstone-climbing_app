@@ -215,16 +215,6 @@ class _FollowersWidgetState extends State<FollowersWidget> {
                                     ),
                                   );
                                 }
-                                List<UsersRecord> rowUsersRecordList =
-                                    snapshot.data!;
-                                // Return an empty Container when the item does not exist.
-                                if (snapshot.data!.isEmpty) {
-                                  return Container();
-                                }
-                                final rowUsersRecord =
-                                    rowUsersRecordList.isNotEmpty
-                                        ? rowUsersRecordList.first
-                                        : null;
                                 return Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.start,

@@ -121,15 +121,6 @@ class _FollowingWidgetState extends State<FollowingWidget> {
                         ),
                       );
                     }
-                    List<UsersRecord> listViewUsersRecordList = snapshot.data!;
-                    // Return an empty Container when the item does not exist.
-                    if (snapshot.data!.isEmpty) {
-                      return Container();
-                    }
-                    final listViewUsersRecord =
-                        listViewUsersRecordList.isNotEmpty
-                            ? listViewUsersRecordList.first
-                            : null;
                     return Builder(
                       builder: (context) {
                         final following =

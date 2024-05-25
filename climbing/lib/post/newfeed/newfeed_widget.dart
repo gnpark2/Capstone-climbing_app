@@ -420,13 +420,50 @@ class _NewfeedWidgetState extends State<NewfeedWidget> {
                                                         'IconButton pressed ...');
                                                   },
                                                 ),
-                                                Text(
+                                                StreamBuilder<
+                                                      List<CommentsRecord>>(
+                                                    stream: queryCommentsRecord(
+                                                      queryBuilder:
+                                                          (commentsRecord) =>
+                                                              commentsRecord
+                                                                  .where(
+                                                        'post_type',
+                                                        isEqualTo:
+                                                            listViewPostRecord
+                                                                .reference,
+                                                      ),
+                                                    ),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 50.0,
+                                                            height: 50.0,
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              valueColor:
+                                                                  AlwaysStoppedAnimation<
+                                                                      Color>(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      List<CommentsRecord>
+                                                          textCommentsRecordList =
+                                                          snapshot.data!;
+                                                      return Text(
                                                   formatNumber(
-                                                    listViewPostRecord
-                                                        .numComments,
-                                                    formatType:
-                                                        FormatType.compact,
-                                                  ),
+                                                          textCommentsRecordList
+                                                              .length,
+                                                          formatType: FormatType
+                                                              .compact,
+                                                        ),
                                                   style: FlutterFlowTheme.of(
                                                           context)
                                                       .bodyMedium
@@ -435,7 +472,9 @@ class _NewfeedWidgetState extends State<NewfeedWidget> {
                                                             'Readex Pro',
                                                         letterSpacing: 0.0,
                                                       ),
-                                                ),
+                                                );
+                                                        },
+                                                      ),
                                               ],
                                             ),
                                           ],

@@ -69,8 +69,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       },
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
                       child: FlutterFlowIconButton(
                         borderRadius: 20.0,
                         borderWidth: 1.0,
@@ -86,8 +85,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
                       child: FlutterFlowIconButton(
                         borderRadius: 20.0,
                         borderWidth: 1.0,
@@ -103,8 +101,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 0.0, 0.0),
                       child: FlutterFlowIconButton(
                         borderRadius: 20.0,
                         borderWidth: 1.0,
@@ -118,7 +115,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                           await authManager.signOut();
                           GoRouter.of(context).clearRedirectLocation();
 
-                          context.goNamedAuth('SignInAndUp', context.mounted);//여기까지는 잘 넘어감.
+                          context.goNamedAuth('SignInAndUp', context.mounted);
                         },
                       ),
                     ),
@@ -331,7 +328,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 25.0, 10.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 25.0, 10.0, 10.0),
                 child: StreamBuilder<List<PostRecord>>(
                   stream: queryPostRecord(
                     parent: currentUserReference,
@@ -364,6 +361,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       mainAxisSpacing: 10.0,
                       itemCount: staggeredViewPostRecordList.length,
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(), // Disable the grid view scrolling
                       itemBuilder: (context, staggeredViewIndex) {
                         final staggeredViewPostRecord =
                             staggeredViewPostRecordList[staggeredViewIndex];

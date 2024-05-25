@@ -83,7 +83,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 children: [
                   Padding(
                     padding:
-                        const EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 0.0),
+                        const EdgeInsetsDirectional.fromSTEB(0.0, 6.0, 0.0, 6.0),
                     child: Container(
                       width: 50.0,
                       height: 4.0,
@@ -100,6 +100,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                 child: Text(
                   'Comments',
                   style: FlutterFlowTheme.of(context).headlineMedium.override(
+                        fontSize: 16,
                         fontFamily: 'Outfit',
                         letterSpacing: 0.0,
                       ),
@@ -107,7 +108,7 @@ class _CommentWidgetState extends State<CommentWidget> {
               ),
               Container(
                 width: double.infinity,
-                height: MediaQuery.sizeOf(context).height * 0.5,
+                height: MediaQuery.sizeOf(context).height * 0.3,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
@@ -116,7 +117,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                     queryBuilder: (commentsRecord) => commentsRecord.where(
                       'post_type',
                       isEqualTo: widget.commentparameter?.reference,
-                    ),
+                    ).orderBy('created_time', descending: true),
                   ),
                   builder: (context, snapshot) {
                     // Customize what your widget looks like when it's loading.
@@ -187,7 +188,7 @@ class _CommentWidgetState extends State<CommentWidget> {
                                       Container(
                                         width:
                                             MediaQuery.sizeOf(context).width *
-                                                0.9,
+                                                0.75,
                                         decoration: BoxDecoration(
                                           color: FlutterFlowTheme.of(context)
                                               .secondaryBackground,
