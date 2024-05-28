@@ -65,6 +65,11 @@ class PostRecord extends FirestoreRecord {
   LatLng? get latlng => _latlng;
   bool hasLatlng() => _latlng != null;
 
+  // "gpsImgDirection" field.
+  double? _gpsImgDirection;
+  double get gpsImgDirection => _gpsImgDirection ?? 0.0;
+  bool hasGpsImgDirection() => _gpsImgDirection != null;
+
   DocumentReference get parentReference => reference.parent.parent!;
 
   void _initializeFields() {
@@ -78,6 +83,7 @@ class PostRecord extends FirestoreRecord {
     _numVotes = castToType<int>(snapshotData['num_votes']);
     _postLikedBy = getDataList(snapshotData['Post_liked_by']);
     _latlng = snapshotData['latlng'] as LatLng?;
+    _gpsImgDirection = castToType<double>(snapshotData['gpsImgDirection']);
   }
 
   static Query<Map<String, dynamic>> collection([DocumentReference? parent]) =>
@@ -127,6 +133,7 @@ Map<String, dynamic> createPostRecordData({
   int? numComments,
   int? numVotes,
   LatLng? latlng,
+  double? gpsImgDirection,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -138,6 +145,7 @@ Map<String, dynamic> createPostRecordData({
       'num_comments': numComments,
       'num_votes': numVotes,
       'latlng': latlng,
+      'gpsImgDirection': gpsImgDirection,
     }.withoutNulls,
   );
 
@@ -160,6 +168,7 @@ class PostRecordDocumentEquality implements Equality<PostRecord> {
         e1?.numVotes == e2?.numVotes &&
         listEquality.equals(e1?.postLikedBy, e2?.postLikedBy) &&
         e1?.latlng == e2?.latlng;
+        e1?.gpsImgDirection == e2?.gpsImgDirection;
   }
 
   @override
@@ -173,7 +182,8 @@ class PostRecordDocumentEquality implements Equality<PostRecord> {
         e?.numComments,
         e?.numVotes,
         e?.postLikedBy,
-        e?.latlng
+        e?.latlng,
+        e?.gpsImgDirection
       ]);
 
   @override

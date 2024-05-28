@@ -68,22 +68,21 @@ class _MapMultiLinkPostWidgetState extends State<MapMultiLinkPostWidget> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: 60.0,
-                child: Divider(
-                  thickness: 3.0,
-                  color: FlutterFlowTheme.of(context).alternate,
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 60.0,
+              child: Divider(
+                thickness: 3.0,
+                color: FlutterFlowTheme.of(context).alternate,
               ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(
-                      0.0, 10.0, 0.0, 0.0),
-                      //stream에서 List upPost로 바꿔야함.
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                    0.0, 10.0, 0.0, 0.0),
+                child: SingleChildScrollView(
                   child: MasonryGridView.builder(
                     gridDelegate:
                         const SliverSimpleGridDelegateWithFixedCrossAxisCount(
@@ -93,6 +92,7 @@ class _MapMultiLinkPostWidgetState extends State<MapMultiLinkPostWidget> {
                     mainAxisSpacing: 10.0,
                     itemCount: widget.upPost!.length,
                     shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(), // 추가된 스크롤 기능 설정
                     itemBuilder: (context, staggeredViewIndex) {
                       final staggeredViewPostRecord =
                           widget.upPost![staggeredViewIndex];
@@ -133,8 +133,8 @@ class _MapMultiLinkPostWidgetState extends State<MapMultiLinkPostWidget> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
