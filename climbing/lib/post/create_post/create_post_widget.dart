@@ -431,6 +431,7 @@ import 'create_post_model.dart';
 export 'create_post_model.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image/image.dart' as img;
 
 class CreatePostWidget extends StatefulWidget {
   const CreatePostWidget({super.key});
@@ -535,6 +536,32 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     super.dispose();
   }
 
+  Future<img.Image?> resizeImage(Uint8List data, int maxSize) async {
+    final originalImage = img.decodeImage(data);
+    if (originalImage == null) {
+      print('Failed to decode image');
+      return null;
+    }
+    
+    final width = originalImage.width;
+    final height = originalImage.height;
+    final aspectRatio = width / height;
+
+    int newWidth;
+    int newHeight;
+
+    if (width > height) {
+      newWidth = maxSize;
+      newHeight = (maxSize / aspectRatio).round();
+    } else {
+      newHeight = maxSize;
+      newWidth = (maxSize * aspectRatio).round();
+    }
+
+    final resizedImage = img.copyResize(originalImage, width: newWidth, height: newHeight);
+    return resizedImage;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -562,6 +589,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
         ),
         body: SafeArea(
           top: true,
+          child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -671,8 +699,8 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                     borderRadius: BorderRadius.circular(8.0),
                     child: Image.network(
                       _model.uploadedFileUrl1,
-                      width: MediaQuery.sizeOf(context).width * 0.95,
-                      height: MediaQuery.sizeOf(context).height * 0.35,
+                      width: MediaQuery.sizeOf(context).width * 0.90,
+                      height: MediaQuery.sizeOf(context).height * 0.90,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -708,39 +736,43 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                             setState(() {
                               selecF = result.files.first;
                             });
-                            // 이미지 업로드 로직
-                            setState(() => _model.isDataUploading1 = true);
-                            var selectedUploadedFiles = <FFUploadedFile>[];
-                            var downloadUrls = <String>[];
-                            try {
-                              if (result.files.first.bytes != null) {
-                                selectedUploadedFiles = [FFUploadedFile(
-                                  name: result.files.first.name,
-                                  bytes: result.files.first.bytes!,
-                                  // 추가로 필요한 속성들 설정
-                                )];
+                            final resizedImage = await resizeImage(result.files.first.bytes!, 1920);
+                            if (resizedImage != null) {
+                              final resizedImageBytes = Uint8List.fromList(img.encodeJpg(resizedImage));
+                              // 이미지 업로드 로직
+                              setState(() => _model.isDataUploading1 = true);
+                              var selectedUploadedFiles = <FFUploadedFile>[];
+                              var downloadUrls = <String>[];
+                              try {
+                                if (result.files.first.bytes != null) {
+                                  selectedUploadedFiles = [FFUploadedFile(
+                                    name: result.files.first.name,
+                                    bytes: result.files.first.bytes!,
+                                    // 추가로 필요한 속성들 설정
+                                  )];
 
-                                String? downloadUrl = await uploadData(
-                                  result.files.first.name,
-                                  result.files.first.bytes!,
-                                  // 추가로 필요한 속성들 설정
-                                );
+                                  String? downloadUrl = await uploadData(
+                                    result.files.first.name,
+                                    result.files.first.bytes!,
+                                    // 추가로 필요한 속성들 설정
+                                  );
 
-                                if (downloadUrl != null) {
-                                  downloadUrls = [downloadUrl];
+                                  if (downloadUrl != null) {
+                                    downloadUrls = [downloadUrl];
+                                  }
                                 }
+                              } finally {
+                                _model.isDataUploading1 = false;
                               }
-                            } finally {
-                              _model.isDataUploading1 = false;
-                            }
-                            if (selectedUploadedFiles.isNotEmpty && downloadUrls.isNotEmpty) {
-                              setState(() {
-                                _model.uploadedLocalFile1 = selectedUploadedFiles.first;
-                                _model.uploadedFileUrl1 = downloadUrls.first;
-                              });
-                            } else {
-                              setState(() {});
-                              return;
+                              if (selectedUploadedFiles.isNotEmpty && downloadUrls.isNotEmpty) {
+                                setState(() {
+                                  _model.uploadedLocalFile1 = selectedUploadedFiles.first;
+                                  _model.uploadedFileUrl1 = downloadUrls.first;
+                                });
+                              } else {
+                                setState(() {});
+                                return;
+                              }
                             }
                           }
                         }
@@ -814,7 +846,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 15.0, 10.0, 0.0),
+                padding: const EdgeInsetsDirectional.fromSTEB(10.0, 15.0, 10.0, 10.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -878,6 +910,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
