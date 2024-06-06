@@ -216,7 +216,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                           latlng: latLng,
                           gpsImgDirection: gpsImgDirection ?? 1000,
                         ));
-                        context.pushNamed('profile');
+                        Navigator.pop(context);
                       } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
