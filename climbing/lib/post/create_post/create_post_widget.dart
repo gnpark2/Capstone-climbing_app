@@ -110,30 +110,30 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     super.dispose();
   }
 
-  Future<img.Image?> resizeImage(Uint8List data, int maxSize) async {
-    final originalImage = img.decodeImage(data);
-    if (originalImage == null) {
-      return null;
-    }
-    
-    final width = originalImage.width;
-    final height = originalImage.height;
-    final aspectRatio = width / height;
-
-    int newWidth;
-    int newHeight;
-
-    if (width > height) {
-      newWidth = maxSize;
-      newHeight = (maxSize / aspectRatio).round();
-    } else {
-      newHeight = maxSize;
-      newWidth = (maxSize * aspectRatio).round();
-    }
-
-    final resizedImage = img.copyResize(originalImage, width: newWidth, height: newHeight);
-    return resizedImage;
+  Future<Uint8List?> resizeImage(Uint8List data, int maxSize, {int quality = 85}) async {
+  final originalImage = img.decodeImage(data);
+  if (originalImage == null) {
+    return null;
   }
+
+  final width = originalImage.width;
+  final height = originalImage.height;
+  final aspectRatio = width / height;
+
+  int newWidth;
+  int newHeight;
+
+  if (width > height) {
+    newWidth = maxSize;
+    newHeight = (maxSize / aspectRatio).round();
+  } else {
+    newHeight = maxSize;
+    newWidth = (maxSize * aspectRatio).round();
+  }
+
+  final resizedImage = img.copyResize(originalImage, width: newWidth, height: newHeight);
+  return Uint8List.fromList(img.encodeJpg(resizedImage, quality: quality));
+}
 
   @override
   Widget build(BuildContext context) {
@@ -304,24 +304,25 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                             setState(() {
                               selecF = result.files.first;
                             });
-                            final resizedImage = await resizeImage(result.files.first.bytes!, 1920);
-                            if (resizedImage != null) {
-                              final resizedImageBytes = Uint8List.fromList(img.encodeJpg(resizedImage));
+                            final resizedImageBytes = await resizeImage(result.files.first.bytes!, 1920, quality: 85);
+                            if (resizedImageBytes != null) {
                               // 이미지 업로드 로직
                               setState(() => _model.isDataUploading1 = true);
                               var selectedUploadedFiles = <FFUploadedFile>[];
                               var downloadUrls = <String>[];
                               try {
-                                if (result.files.first.bytes != null) {
-                                  selectedUploadedFiles = [FFUploadedFile(
-                                    name: result.files.first.name,
-                                    bytes: result.files.first.bytes!,
-                                    // 추가로 필요한 속성들 설정
-                                  )];
+                                if (resizedImageBytes != null) {
+                                  selectedUploadedFiles = [
+                                    FFUploadedFile(
+                                      name: result.files.first.name,
+                                      bytes: resizedImageBytes,
+                                      // 추가로 필요한 속성들 설정
+                                    )
+                                  ];
 
                                   String? downloadUrl = await uploadData(
                                     result.files.first.name,
-                                    result.files.first.bytes!,
+                                    resizedImageBytes,
                                     // 추가로 필요한 속성들 설정
                                   );
 
