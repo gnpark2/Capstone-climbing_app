@@ -276,42 +276,46 @@ class _FlutterFlowGoogleMapState extends State<FlutterFlowGoogleMap> {
 
 
   Future<BitmapDescriptor?> createMarkerFromUrl(BuildContext context, String imageUrl, {double size = 50.0}) async {
-    if (_iconCache.containsKey(imageUrl)) {
-      return _iconCache[imageUrl];
-    }
-
-    final imageProvider = CachedNetworkImageProvider(imageUrl);
-
-    final targetHeight = (size * MediaQuery.of(context).devicePixelRatio).toInt();
-    final resizedImageProvider = ResizeImage(
-      imageProvider,
-      height: targetHeight,
-      policy: ResizeImagePolicy.fit,
-      allowUpscaling: true,
-    );
-
-    final imageConfiguration = createLocalImageConfiguration(context, size: Size.square(size));
-    final Completer<BitmapDescriptor> completer = Completer();
-
-    resizedImageProvider.resolve(imageConfiguration).addListener(
-      ImageStreamListener((ImageInfo img, bool synchronousCall) async {
-        final ByteData? bytes = await img.image.toByteData(format: ImageByteFormat.png);
-        if (bytes != null) {
-          final BitmapDescriptor bitmapDescriptor = BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
-          completer.complete(bitmapDescriptor);
-        } else {
-          completer.completeError('Failed to convert image to ByteData');
-        }
-      }),
-    );
-
-    return completer.future;
+  final cacheKey = 'no_arrow_$imageUrl';
+  
+  if (_iconCache.containsKey(cacheKey)) {
+    return _iconCache[cacheKey];
   }
 
+  final imageProvider = CachedNetworkImageProvider(imageUrl);
 
-  Future<BitmapDescriptor?> createMarkerWithArrow(BuildContext context, String imageUrl, double direction, {double size = 50.0}) async {
-  if (_iconCache.containsKey(imageUrl)) {
-    return _iconCache[imageUrl];
+  final targetHeight = (size * MediaQuery.of(context).devicePixelRatio).toInt();
+  final resizedImageProvider = ResizeImage(
+    imageProvider,
+    height: targetHeight,
+    policy: ResizeImagePolicy.fit,
+    allowUpscaling: true,
+  );
+
+  final imageConfiguration = createLocalImageConfiguration(context, size: Size.square(size));
+  final Completer<BitmapDescriptor> completer = Completer();
+
+  resizedImageProvider.resolve(imageConfiguration).addListener(
+    ImageStreamListener((ImageInfo img, bool synchronousCall) async {
+      final ByteData? bytes = await img.image.toByteData(format: ImageByteFormat.png);
+      if (bytes != null) {
+        final BitmapDescriptor bitmapDescriptor = BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
+        _iconCache[cacheKey] = bitmapDescriptor; // Cache the image with no arrow
+        completer.complete(bitmapDescriptor);
+      } else {
+        completer.completeError('Failed to convert image to ByteData');
+      }
+    }),
+  );
+
+  return completer.future;
+}
+
+Future<BitmapDescriptor?> createMarkerWithArrow(BuildContext context, String imageUrl, double direction, {double size = 50.0}) async {
+  final cacheKey = 'arrow_$direction\_$imageUrl';
+  
+  if (_iconCache.containsKey(cacheKey)) {
+    return _iconCache[cacheKey];
   }
 
   final baseImageProvider = CachedNetworkImageProvider(imageUrl);
@@ -345,8 +349,8 @@ class _FlutterFlowGoogleMapState extends State<FlutterFlowGoogleMap> {
           if (baseBytes != null && arrowBytes != null) {
             final combinedBytes = await combineImages(baseBytes.buffer.asUint8List(), arrowBytes.buffer.asUint8List(), direction);
             final BitmapDescriptor bitmapDescriptor = BitmapDescriptor.fromBytes(combinedBytes);
+            _iconCache[cacheKey] = bitmapDescriptor; // Cache the combined image
             completer.complete(bitmapDescriptor);
-            _iconCache[imageUrl] = bitmapDescriptor; // Cache the combined image
           } else {
             completer.completeError('Failed to convert image to ByteData');
           }
