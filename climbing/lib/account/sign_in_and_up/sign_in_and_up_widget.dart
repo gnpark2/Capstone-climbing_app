@@ -705,16 +705,8 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                                                             context)
                                                         .showSnackBar(
                                                       SnackBar(
-                                                        content: Text(
+                                                        content: const Text(
                                                           'Please check your e-mail to verify.',
-                                                          style: TextStyle(
-                                                            color: FlutterFlowTheme
-                                                                    .of(context)
-                                                                .info,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal,
-                                                          ),
                                                         ),
                                                         duration: const Duration(
                                                             milliseconds: 3000),
