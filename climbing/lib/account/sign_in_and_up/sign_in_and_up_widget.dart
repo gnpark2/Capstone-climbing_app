@@ -166,7 +166,7 @@ class _SignInAndUpWidgetState extends State<SignInAndUpWidget>
                         size: 32.0,
                       ),
                       onPressed: () {
-                        final imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
+                        const imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
 
                         File(imagePath).existsSync()
                         ? context.pushNamed('TestPage')

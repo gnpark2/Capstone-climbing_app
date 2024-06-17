@@ -281,30 +281,50 @@ class _FlutterFlowGoogleMapState extends State<FlutterFlowGoogleMap> {
   }
 
   @override
-  Widget build(BuildContext context) => AbsorbPointer(
-        absorbing: !widget.allowInteraction,
-        child: GoogleMap(
-          onMapCreated: (controller) async {
-            _controller.complete(controller);
-            await controller.setMapStyle(googleMapStyleStrings[widget.style]);
-            _clusterManager.setMapId(controller.mapId);
-          },
-          onCameraIdle: onCameraIdle,
-          onCameraMove: _clusterManager.onCameraMove,
-          initialCameraPosition: CameraPosition(
-            target: initialPosition,
-            zoom: initialZoom,
+  Widget build(BuildContext context) {
+    return AbsorbPointer(
+      absorbing: !widget.allowInteraction,
+      child: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: (controller) async {
+              _controller.complete(controller);
+              await controller.setMapStyle(googleMapStyleStrings[widget.style]);
+              _clusterManager.setMapId(controller.mapId);
+            },
+            onCameraIdle: onCameraIdle,
+            onCameraMove: _clusterManager.onCameraMove,
+            initialCameraPosition: CameraPosition(
+              target: initialPosition,
+              zoom: initialZoom,
+            ),
+            zoomControlsEnabled: false,
+            myLocationButtonEnabled: false,
+            mapType: widget.mapType,
+            zoomGesturesEnabled: widget.allowZoom,
+            myLocationEnabled: widget.showLocation,
+            compassEnabled: widget.showCompass,
+            mapToolbarEnabled: widget.showMapToolbar,
+            trafficEnabled: widget.showTraffic,
+            markers: markers,
+
           ),
-          mapType: widget.mapType,
-          zoomGesturesEnabled: widget.allowZoom,
-          zoomControlsEnabled: widget.showZoomControls,
-          myLocationEnabled: widget.showLocation,
-          compassEnabled: widget.showCompass,
-          mapToolbarEnabled: widget.showMapToolbar,
-          trafficEnabled: widget.showTraffic,
-          markers: markers,
-        ),
-      );
+          Positioned(
+            bottom: 10, // Adjust position as needed
+            left: 10, // Adjust position as needed
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(2),
+              /*child: const Text(
+                'Custom Logo',
+                style: TextStyle(fontSize: 12, color: Colors.black),
+              ),*/
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {

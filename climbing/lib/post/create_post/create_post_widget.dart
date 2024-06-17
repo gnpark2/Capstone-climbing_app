@@ -1,3 +1,240 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/backend/firebase_storage/storage.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import '/flutter_flow/custom_functions.dart' as functions;
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'create_post_model.dart';
+export 'create_post_model.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:file_picker/file_picker.dart';
+
+class CreatePostWidget extends StatefulWidget {
+  const CreatePostWidget({super.key});
+
+  @override
+  State<CreatePostWidget> createState() => _CreatePostWidgetState();
+}
+
+class _CreatePostWidgetState extends State<CreatePostWidget> {
+  late CreatePostModel _model;
+  late PlatformFile selecF;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    requestPermissions();
+
+    _model = createModel(context, () => CreatePostModel());
+
+    _model.textController1 ??= TextEditingController();
+    _model.textFieldFocusNode1 ??= FocusNode();
+
+    _model.textController2 ??= TextEditingController();
+    _model.textFieldFocusNode2 ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  Future<void> requestPermissions() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.accessMediaLocation,
+      Permission.location,
+    ].request();
+
+    if (statuses[Permission.accessMediaLocation]!.isGranted &&
+        statuses[Permission.location]!.isGranted) {
+      print("권한이 허용되었습니다.");
+    } else {
+      print("필요한 권한이 거부되었습니다.");
+    }
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _model.unfocusNode.canRequestFocus
+          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
+          : FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
+          title: Text(
+            '새 게시물',
+            style: FlutterFlowTheme.of(context).headlineMedium.override(
+              fontFamily: 'Outfit',
+              color: Colors.white,
+              fontSize: 22.0,
+              letterSpacing: 0.0,
+            ),
+          ),
+          centerTitle: true,
+          elevation: 2.0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: SafeArea(
+          top: true,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          child: _model.uploadedFileUrl1 != ''
+                              ? ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: Image.network(
+                              _model.uploadedFileUrl1,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                              : Center(
+                            child: Text(
+                              '커버 이미지를 업로드하세요',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // 미리 보기 기능 추가
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black.withOpacity(0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('미리 보기', style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                type: FileType.image,
+                                withData: true,
+                                withReadStream: false,
+                              );
+
+                              if (result != null) {
+                                setState(() {
+                                  selecF = result.files.first;
+                                });
+                                setState(() => _model.isDataUploading1 = true);
+                                var selectedUploadedFiles = <FFUploadedFile>[];
+                                var downloadUrls = <String>[];
+                                try {
+                                  if (result.files.first.bytes != null) {
+                                    selectedUploadedFiles = [FFUploadedFile(
+                                      name: result.files.first.name,
+                                      bytes: result.files.first.bytes!,
+                                    )];
+
+                                    String? downloadUrl = await uploadData(
+                                      result.files.first.name,
+                                      result.files.first.bytes!,
+                                    );
+
+                                    if (downloadUrl != null) {
+                                      downloadUrls = [downloadUrl];
+                                    }
+                                  }
+                                } finally {
+                                  _model.isDataUploading1 = false;
+                                }
+                                if (selectedUploadedFiles.isNotEmpty && downloadUrls.isNotEmpty) {
+                                  setState(() {
+                                    _model.uploadedLocalFile1 = selectedUploadedFiles.first;
+                                    _model.uploadedFileUrl1 = downloadUrls.first;
+                                  });
+                                } else {
+                                  setState(() {});
+                                  return;
+                                }
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black.withOpacity(0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text('커버 편집', style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: TextField(
+                    controller: _model.textController2,
+                    focusNode: _model.textFieldFocusNode2,
+                    decoration: InputDecoration(
+                      hintText: '문구를 입력하세요...',
+                      hintStyle: FlutterFlowTheme.of(context)
+                          .labelMedium
+                          .override(
+                        fontFamily: 'Readex Pro',
+                        letterSpacing: 0.0,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      fontFamily: 'Readex Pro',
+                      letterSpacing: 0.0,
+                    ),
+                    maxLines: null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/*
 // 세번쨰. filepicker
 
 import '/auth/firebase_auth/auth_util.dart';
@@ -136,7 +373,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                         if ((_model.textController1.text != '') &&
                             ((_model.uploadedFileUrl1 != '') ||
                                 (_model.uploadedFileUrl2 != ''))) {
-                        print(selecF.toString() + 'selecF값 입니다.');
+                        print('${selecF}selecF값 입니다.');
                         LatLng? latLng = await functions.getLatLng(selecF);
 
                         await PostRecord.createDoc(currentUserReference!)
@@ -149,7 +386,7 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
                           latlng: latLng,
                         ));
                         //test
-                        print(latLng.toString() + '입니다.');
+                        print('$latLng입니다.');
                         //test
                         context.pushNamed('profile');
                       } else {
@@ -412,4 +649,4 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
       ),
     );
   }
-}
+}*/

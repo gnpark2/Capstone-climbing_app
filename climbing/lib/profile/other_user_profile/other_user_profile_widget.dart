@@ -6,7 +6,6 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'other_user_profile_model.dart';
 export 'other_user_profile_model.dart';
 
@@ -52,11 +51,11 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Color(0xFFF0F0F0), // Light grey background color
         body: FutureBuilder<UsersRecord>(
           future: (_model.documentRequestCompleter ??= Completer<UsersRecord>()
-                ..complete(
-                    UsersRecord.getDocumentOnce(widget.userss!.reference)))
+            ..complete(
+                UsersRecord.getDocumentOnce(widget.userss!.reference)))
               .future,
           builder: (context, snapshot) {
             // Customize what your widget looks like when it's loading.
@@ -79,31 +78,42 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(10.0, 16.0, 10.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(10.0, 13.0, 10.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         FlutterFlowIconButton(
                           borderRadius: 20.0,
                           borderWidth: 1.0,
                           buttonSize: 40.0,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.arrow_back_ios_sharp,
-                            color: FlutterFlowTheme.of(context).primaryText,
+                            color: Colors.black, // Black color for icon
                             size: 24.0,
                           ),
                           onPressed: () async {
                             context.safePop();
                           },
+                        ), // Add a spacer to push the text to the right
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "@${columnUsersRecord.username}",
+                              style: const TextStyle(
+                                color: Colors.black, // Black color for text
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(10.0, 30.0, 10.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(10.0, 30.0, 10.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,56 +133,84 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                         Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  StreamBuilder<List<PostRecord>>(
+                                    stream: queryPostRecord(
+                                      parent: widget.userss?.reference,
+                                    ),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Text(
+                                          '0',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                          ),
+                                        );
+                                      }
+                                      return Text(
+                                        snapshot.data!.length.toString(),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Text(
+                                    'Posts',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Text(
+                                    columnUsersRecord.followedUsers.length.toString(),
+                                    style: TextStyle(
+                                      color: Colors.black, // Black color for text
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Followers',
+                                    style: TextStyle(
+                                      color: Colors.black, // Black color for text
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
                                   columnUsersRecord.following.length.toString(),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        letterSpacing: 0.0,
-                                      ),
+                                  style: TextStyle(
+                                    color: Colors.black, // Black color for text
+                                    fontSize: 16,
+                                  ),
                                 ),
                                 Text(
                                   'Following',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Readex Pro',
-                                        letterSpacing: 0.0,
-                                      ),
+                                  style: TextStyle(
+                                    color: Colors.black, // Black color for text
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(
-                                  10.0, 0.0, 0.0, 0.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Text(
-                                    columnUsersRecord.followedUsers.length
-                                        .toString(),
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                  Text(
-                                    'Followers',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          letterSpacing: 0.0,
-                                        ),
-                                  ),
-                                ],
-                              ),
                             ),
                           ],
                         ),
@@ -180,8 +218,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(22.0, 15.0, 15.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(22.0, 15.0, 15.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,43 +232,10 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                                 columnUsersRecord.displayName,
                                 'ghost user',
                               ),
-                              style: FlutterFlowTheme.of(context)
-                                  .titleLarge
-                                  .override(
-                                    fontFamily: 'Outfit',
-                                    letterSpacing: 0.0,
-                                  ),
-                            ),
-                            RichText(
-                              textScaler: MediaQuery.of(context).textScaler,
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: '@',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primary,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  TextSpan(
-                                    text: valueOrDefault<String>(
-                                      columnUsersRecord.username,
-                                      'another',
-                                    ),
-                                    style: const TextStyle(),
-                                  )
-                                ],
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Readex Pro',
-                                      letterSpacing: 0.0,
-                                    ),
+                              style: TextStyle(
+                                color: Colors.black, // Black color for text
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -240,53 +244,29 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                           Row(
                             mainAxisSize: MainAxisSize.max,
                             children: [
-                              if ((currentUserDocument?.following.toList() ??
-                                          [])
-                                      .contains(widget.userss?.reference) ==
-                                  false)
+                              if (!(currentUserDocument?.following?.contains(widget.userss?.reference) ?? false))
                                 AuthUserStreamWidget(
                                   builder: (context) => FFButtonWidget(
                                     onPressed: () async {
                                       await currentUserReference!.update({
-                                        ...mapToFirestore(
-                                          {
-                                            'following': FieldValue.arrayUnion(
-                                                [widget.userss?.reference]),
-                                          },
-                                        ),
+                                        'following': FieldValue.arrayUnion([widget.userss?.reference]),
                                       });
 
                                       await widget.userss!.reference.update({
-                                        ...mapToFirestore(
-                                          {
-                                            'followedUsers':
-                                                FieldValue.arrayUnion(
-                                                    [currentUserReference]),
-                                          },
-                                        ),
+                                        'followedUsers': FieldValue.arrayUnion([currentUserReference]),
                                       });
-                                      setState(() => _model
-                                          .documentRequestCompleter = null);
-                                      await _model
-                                          .waitForDocumentRequestCompleted();
+                                      setState(() => _model.documentRequestCompleter = null);
+                                      await _model.waitForDocumentRequestCompleted();
                                     },
                                     text: 'Follow',
                                     options: FFButtonOptions(
                                       height: 40.0,
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          24.0, 0.0, 24.0, 0.0),
-                                      iconPadding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            color: Colors.white,
-                                            letterSpacing: 0.0,
-                                          ),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
                                       elevation: 3.0,
                                       borderSide: const BorderSide(
                                         color: Colors.transparent,
@@ -296,53 +276,29 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                                     ),
                                   ),
                                 ),
-                              if ((currentUserDocument?.following.toList() ??
-                                          [])
-                                      .contains(widget.userss?.reference) ==
-                                  true)
+                              if (currentUserDocument?.following?.contains(widget.userss?.reference) ?? false)
                                 AuthUserStreamWidget(
                                   builder: (context) => FFButtonWidget(
                                     onPressed: () async {
                                       await currentUserReference!.update({
-                                        ...mapToFirestore(
-                                          {
-                                            'following': FieldValue.arrayRemove(
-                                                [widget.userss?.reference]),
-                                          },
-                                        ),
+                                        'following': FieldValue.arrayRemove([widget.userss?.reference]),
                                       });
 
                                       await widget.userss!.reference.update({
-                                        ...mapToFirestore(
-                                          {
-                                            'followedUsers':
-                                                FieldValue.arrayRemove(
-                                                    [currentUserReference]),
-                                          },
-                                        ),
+                                        'followedUsers': FieldValue.arrayRemove([currentUserReference]),
                                       });
-                                      setState(() => _model
-                                          .documentRequestCompleter = null);
-                                      await _model
-                                          .waitForDocumentRequestCompleted();
+                                      setState(() => _model.documentRequestCompleter = null);
+                                      await _model.waitForDocumentRequestCompleted();
                                     },
                                     text: 'UnFollow',
                                     options: FFButtonOptions(
                                       height: 40.0,
-                                      padding: const EdgeInsetsDirectional.fromSTEB(
-                                          24.0, 0.0, 24.0, 0.0),
-                                      iconPadding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0.0, 0.0, 0.0, 0.0),
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      textStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .override(
-                                            fontFamily: 'Readex Pro',
-                                            color: Colors.white,
-                                            letterSpacing: 0.0,
-                                          ),
+                                      padding: const EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                                      color: FlutterFlowTheme.of(context).primary,
+                                      textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                      ),
                                       elevation: 3.0,
                                       borderSide: const BorderSide(
                                         color: Colors.transparent,
@@ -358,8 +314,7 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(22.0, 15.0, 15.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(22.0, 15.0, 15.0, 0.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
@@ -369,28 +324,23 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                               columnUsersRecord.bio,
                               'details',
                             ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Readex Pro',
-                                  letterSpacing: 0.0,
-                                ),
+                            style: TextStyle(
+                              color: Colors.black, // Black color for text
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(10.0, 25.0, 10.0, 0.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(22.0, 15.0, 15.0, 0.0),
                     child: StreamBuilder<List<PostRecord>>(
                       stream: queryPostRecord(
                         parent: widget.userss?.reference,
-                        queryBuilder: (postRecord) =>
-                            postRecord.orderBy('time_posted'),
+                        queryBuilder: (postRecord) => postRecord.orderBy('time_posted'),
                       ),
                       builder: (context, snapshot) {
-                        // Customize what your widget looks like when it's loading.
                         if (!snapshot.hasData) {
                           return Center(
                             child: SizedBox(
@@ -404,51 +354,54 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
                             ),
                           );
                         }
-                        List<PostRecord> staggeredViewPostRecordList =
-                            snapshot.data!;
-                        return MasonryGridView.builder(
-                          gridDelegate:
-                              const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                          ),
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                          itemCount: staggeredViewPostRecordList.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(), // Disable the grid view scrolling
-                          itemBuilder: (context, staggeredViewIndex) {
-                            final staggeredViewPostRecord =
-                                staggeredViewPostRecordList[staggeredViewIndex];
-                            return InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                context.pushNamed(
-                                  'postDetail',
-                                  queryParameters: {
-                                    'postdet': serializeParam(
-                                      staggeredViewPostRecord,
-                                      ParamType.Document,
-                                    ),
-                                  }.withoutNulls,
-                                  extra: <String, dynamic>{
-                                    'postdet': staggeredViewPostRecord,
+                        List<PostRecord> postRecords = snapshot.data!;
+                        return Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            GridView.builder(
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3, // 3 columns
+                                crossAxisSpacing: 10.0,
+                                mainAxisSpacing: 10.0,
+                                childAspectRatio: 1.0, // Maintain square aspect ratio
+                              ),
+                              itemCount: postRecords.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(), // Disable the grid view scrolling
+                              itemBuilder: (context, gridViewIndex) {
+                                final gridViewPostRecord = postRecords[gridViewIndex];
+                                return InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    context.pushNamed(
+                                      'postDetail',
+                                      queryParameters: {
+                                        'postdet': serializeParam(
+                                          gridViewPostRecord,
+                                          ParamType.Document,
+                                        ),
+                                      }.withoutNulls,
+                                      extra: <String, dynamic>{
+                                        'postdet': gridViewPostRecord,
+                                      },
+                                    );
                                   },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.network(
+                                      gridViewPostRecord.postPhoto,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 );
                               },
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: Image.network(
-                                  staggeredViewPostRecord.postPhoto,
-                                  width: 300.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -462,3 +415,4 @@ class _OtherUserProfileWidgetState extends State<OtherUserProfileWidget> {
     );
   }
 }
+

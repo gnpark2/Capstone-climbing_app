@@ -73,12 +73,12 @@ class _MapWidgetState extends State<MapWidget> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to convert image to bytes')),
+        const SnackBar(content: Text('Failed to convert image to bytes')),
       );
     }
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to capture screenshot')),
+      const SnackBar(content: Text('Failed to capture screenshot')),
     );
   }
 }
@@ -239,7 +239,7 @@ class _MapWidgetState extends State<MapWidget> {
                         size: 32.0,
                       ),
                       onPressed: () {
-                        final imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
+                        const imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
 
                         File(imagePath).existsSync()
                         ? context.pushNamed('TestPage')
@@ -271,7 +271,7 @@ class _MapWidgetState extends State<MapWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FloatingActionButton(
-                      child: Text("CAP"),
+                      child: const Text("CAP"),
                       onPressed: () {
                       WidgetsBinding.instance.addPostFrameCallback((_) => _capture());
                       }

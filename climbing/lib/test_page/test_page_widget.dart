@@ -37,7 +37,7 @@ class _TestPageWidgetState extends State<TestPageWidget> {
   Widget build(BuildContext context) {
     context.watch<FFAppState>();
 
-    final imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
+    const imagePath = '/data/user/0/com.mycompany.climbing/app_flutter/screenshot1.png';
 
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
@@ -56,7 +56,7 @@ class _TestPageWidgetState extends State<TestPageWidget> {
                   width: MediaQuery.sizeOf(context).width * 1.0,
                   height: MediaQuery.sizeOf(context).height * 0.9,
                   child: imagePath.isNotEmpty
-                        ? custom_widgets.showImageWidget(imagePath: imagePath)
+                        ? const custom_widgets.showImageWidget(imagePath: imagePath)
                         : const Text('No Screenshot'),
                 ),
               ],
