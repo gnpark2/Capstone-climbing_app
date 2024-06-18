@@ -58,12 +58,13 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                       ),
                       Row(
                         children: [
+                          const SizedBox(width: 10),
                           FlutterFlowIconButton(
                             borderRadius: 20.0,
                             borderWidth: 1.0,
                             buttonSize: 40.0,
                             icon: FaIcon(
-                              FontAwesomeIcons.squarePlus,
+                              FontAwesomeIcons.plusSquare,
                               color: FlutterFlowTheme.of(context).primaryText,
                               size: 24.0,
                             ),
@@ -94,158 +95,186 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AuthUserStreamWidget(
-                        builder: (context) => Container(
-                          width: 100.0,
-                          height: 100.0,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.network(
-                            currentUserPhoto,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
+                      Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                StreamBuilder<List<PostRecord>>(
-                                  stream: queryPostRecord(
-                                    parent: currentUserReference,
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Text(
-                                        '0',
-                                        style: FlutterFlowTheme.of(context).bodyMedium,
-                                      );
-                                    }
-                                    return Text(
-                                      snapshot.data!.length.toString(),
-                                      style: FlutterFlowTheme.of(context).bodyMedium,
-                                    );
-                                  },
-                                ),
-                                Text('게시물', style: FlutterFlowTheme.of(context).bodySmall),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                StreamBuilder<List<UsersRecord>>(
-                                  stream: queryUsersRecord(
-                                    queryBuilder: (usersRecord) => usersRecord.where(
-                                      'followedUsers',
-                                      arrayContains: currentUserReference,
-                                    ),
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData) {
-                                      return Text(
-                                        '0',
-                                        style: FlutterFlowTheme.of(context).bodyMedium,
-                                      );
-                                    }
-                                    return Text(
-                                      snapshot.data!.length.toString(),
-                                      style: FlutterFlowTheme.of(context).bodyMedium,
-                                    );
-                                  },
-                                ),
-                                Text('팔로워', style: FlutterFlowTheme.of(context).bodySmall),
-                              ],
-                            ),
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              StreamBuilder<List<UsersRecord>>(
-                                stream: queryUsersRecord(
-                                  queryBuilder: (usersRecord) => usersRecord.where(
-                                    'following',
-                                    arrayContains: currentUserReference,
-                                  ),
-                                ),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return Text(
-                                      '0',
-                                      style: FlutterFlowTheme.of(context).bodyMedium,
-                                    );
-                                  }
-                                  return Text(
-                                    snapshot.data!.length.toString(),
-                                    style: FlutterFlowTheme.of(context).bodyMedium,
-                                  );
-                                },
+                          AuthUserStreamWidget(
+                            builder: (context) => Container(
+                              width: 80.0,
+                              height: 80.0,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
                               ),
-                              Text('팔로잉', style: FlutterFlowTheme.of(context).bodySmall),
-                            ],
+                              child: Image.network(
+                                currentUserPhoto,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8), // 프로필 사진과 이름 사이 간격
+                          Text(
+                            currentUserDocument?.displayName ?? 'Name',
+                            style: FlutterFlowTheme.of(context).bodyMedium.copyWith(fontSize: 18.0), // 이름 크기 조정
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-                // Username and bio
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(currentUserDocument?.displayName ?? 'Name', style: FlutterFlowTheme.of(context).headlineSmall),
-                      AuthUserStreamWidget(
-                        builder: (context) => Text(
-                          valueOrDefault(currentUserDocument?.bio, ''),
-                          style: FlutterFlowTheme.of(context).bodySmall,
+                      const SizedBox(width: 16), // 간격을 추가
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    StreamBuilder<List<PostRecord>>(
+                                      stream: queryPostRecord(
+                                        parent: currentUserReference,
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Text(
+                                            '0',
+                                            style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
+                                        return Text(
+                                          snapshot.data!.length.toString(),
+                                          style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 4), // 간격을 위해 추가
+                                    Text('게시물', style: FlutterFlowTheme.of(context).bodySmall),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    StreamBuilder<List<UsersRecord>>(
+                                      stream: queryUsersRecord(
+                                        queryBuilder: (usersRecord) => usersRecord.where(
+                                          'followedUsers',
+                                          arrayContains: currentUserReference,
+                                        ),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Text(
+                                            '0',
+                                            style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
+                                        return Text(
+                                          snapshot.data!.length.toString(),
+                                          style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 4), // 간격을 위해 추가
+                                    Text('팔로워', style: FlutterFlowTheme.of(context).bodySmall),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    StreamBuilder<List<UsersRecord>>(
+                                      stream: queryUsersRecord(
+                                        queryBuilder: (usersRecord) => usersRecord.where(
+                                          'following',
+                                          arrayContains: currentUserReference,
+                                        ),
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (!snapshot.hasData) {
+                                          return Text(
+                                            '0',
+                                            style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
+                                        return Text(
+                                          snapshot.data!.length.toString(),
+                                          style: FlutterFlowTheme.of(context).bodyMedium.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 4), // 간격을 위해 추가
+                                    Text('팔로잉', style: FlutterFlowTheme.of(context).bodySmall),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 16), // 프로필 정보와 팔로우 정보 사이 간격
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton(
+                      OutlinedButton(
                         onPressed: () async {
                           context.pushNamed('editProfile');
                         },
-                        style: ElevatedButton.styleFrom(
+                        style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 6),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          textStyle: const TextStyle(fontSize: 14),
+                          side: BorderSide(
+                            color: FlutterFlowTheme.of(context).primary,
+                            width: 2,
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                        child: const Text('프로필 편집'),
+                        child: Text(
+                          '프로필 편집',
+                          style: TextStyle(
+                            color: Colors.grey.shade800, // 검정색에 가까운 회색
+                          ),
+                        ),
                       ),
-                      ElevatedButton(
+                      OutlinedButton(
                         onPressed: () async {
-                          //context.pushNamed('editProfile');
+                          context.pushNamed('editProfile');
                         },
-                        style: ElevatedButton.styleFrom(
+                        style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 6),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          textStyle: const TextStyle(fontSize: 14),
+                          side: BorderSide(
+                            color: FlutterFlowTheme.of(context).primary,
+                            width: 2,
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                        child: const Text('프로필 공유'),
+                        child: Text(
+                          '프로필 공유',
+                          style: TextStyle(
+                            color: Colors.grey.shade800, // 검정색에 가까운 회색
+                          ),
+                        ),
                       ),
                       FlutterFlowIconButton(
                         borderRadius: 20.0,

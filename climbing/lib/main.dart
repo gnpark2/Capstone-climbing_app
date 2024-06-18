@@ -32,7 +32,6 @@ void main() async {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   State<MyApp> createState() => _MyAppState();
 
@@ -61,21 +60,20 @@ class _MyAppState extends State<MyApp> {
     jwtTokenStream.listen((_) {});
     Future.delayed(
       const Duration(milliseconds: 1000),
-      () => _appStateNotifier.stopShowingSplashImage(),
+          () => _appStateNotifier.stopShowingSplashImage(),
     );
   }
 
   @override
   void dispose() {
     authUserSub.cancel();
-
     super.dispose();
   }
 
   void setThemeMode(ThemeMode mode) => setState(() {
-        _themeMode = mode;
-        FlutterFlowTheme.saveThemeMode(mode);
-      });
+    _themeMode = mode;
+    FlutterFlowTheme.saveThemeMode(mode);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +109,6 @@ class NavBarPage extends StatefulWidget {
   _NavBarPageState createState() => _NavBarPageState();
 }
 
-/// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
   String _currentPageName = 'map';
   late Widget? _currentPage;
@@ -129,7 +126,7 @@ class _NavBarPageState extends State<NavBarPage> {
     final tabs = {
       'map': const MapWidget(),
       'newfeed': const NewfeedWidget(),
-      'findUser': const FindUserWidget(),
+      'createpost': const CreatePostWidget(),
       'chat_2_main': const Chat2MainWidget(),
       'profile': const ProfileWidget(),
     };
@@ -143,68 +140,75 @@ class _NavBarPageState extends State<NavBarPage> {
           topRight: Radius.circular(20),
         ),
         child: BottomNavigationBar(
-            currentIndex: currentIndex,
-            onTap: (i) => setState(() {
-              _currentPage = null;
-              _currentPageName = tabs.keys.toList()[i];
-            }),
-            backgroundColor: Colors.white,
-            selectedItemColor: FlutterFlowTheme.of(context).primary,
-            unselectedItemColor: const Color(0x8A000000),
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-            items: <BottomNavigationBarItem>[
-              const BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.map,
+          currentIndex: currentIndex,
+          onTap: (i) => setState(() {
+            _currentPage = null;
+            _currentPageName = tabs.keys.toList()[i];
+          }),
+          backgroundColor: Colors.white,
+          selectedItemColor: FlutterFlowTheme.of(context).primary,
+          unselectedItemColor: const Color(0x8A000000),
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem>[
+            const BottomNavigationBarItem(
+              icon: Icon(
+                Icons.map,
+                size: 30.0,
+              ),
+              label: 'Home',
+              tooltip: '',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(
+                Icons.feed,
+                size: 30.0,
+              ),
+              label: 'Feed',
+              tooltip: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.of(context).primary,
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
                   size: 30.0,
                 ),
-                label: 'Home',
-                tooltip: '',
               ),
-              const BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.feed,
-                  size: 30.0,
-                ),
-                label: 'Feed',
-                tooltip: '',
+              label: '',
+              tooltip: 'Add Post',
+            ),
+            const BottomNavigationBarItem(
+              icon: FaIcon(
+                FontAwesomeIcons.comments,
+                size: 30.0,
               ),
-              BottomNavigationBarItem(
-                icon: FaIcon(
-                  FontAwesomeIcons.squarePlus,
-                  color: FlutterFlowTheme.of(context).primaryText,
-                  size: 24.0,
-                ),
-                label: 'Add Post',
-                tooltip: '',
+              label: 'Messages',
+              tooltip: '',
+            ),
+            BottomNavigationBarItem(
+              icon: currentUserPhoto.isNotEmpty
+                  ? CircleAvatar(
+                backgroundImage: NetworkImage(currentUserPhoto),
+                radius: 20, // Increase the radius for better visibility
+              )
+                  : const Icon(
+                Icons.account_circle,
+                size: 30.0,
               ),
-              const BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.message,
-                  size: 30.0,
-                ),
-                label: 'Messages',
-                tooltip: '',
-              ),
-              BottomNavigationBarItem(
-                icon: _profilePhoto.isEmpty
-                ? CircleAvatar(
-                  backgroundImage: NetworkImage(_profilePhoto),
-                  radius: 15,
-                  )
-                : const Icon(
-                  Icons.account_circle,
-                  size: 30.0,
-                ),
-                label: 'Profile',
-                tooltip: '',
-              ),
-            ],
-          ),
-        )
-      );
+              label: 'Profile',
+              tooltip: '',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

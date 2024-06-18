@@ -51,8 +51,10 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
     if (statuses[Permission.accessMediaLocation]!.isGranted &&
         statuses[Permission.location]!.isGranted) {
       print("권한이 허용되었습니다.");
+      // 위치 정보를 포함한 사진 접근 로직 추가
     } else {
       print("필요한 권한이 거부되었습니다.");
+      // 권한 거부 처리 로직 추가
     }
   }
 
@@ -70,12 +72,12 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white,
+        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: FlutterFlowTheme.of(context).primary,
           automaticallyImplyLeading: false,
           title: Text(
-            '새 게시물',
+            '새로운 포스트',
             style: FlutterFlowTheme.of(context).headlineMedium.override(
               fontFamily: 'Outfit',
               color: Colors.white,
@@ -83,146 +85,265 @@ class _CreatePostWidgetState extends State<CreatePostWidget> {
               letterSpacing: 0.0,
             ),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () {
+                // 추가 메뉴 버튼 로직
+              },
+            ),
+          ],
           centerTitle: true,
           elevation: 2.0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
         ),
         body: SafeArea(
           top: true,
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsetsDirectional.fromSTEB(16.0, 16.0, 16.0, 0.0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Expanded(
-                  child: Center(
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(16.0),
-                          ),
-                          child: _model.uploadedFileUrl1 != ''
-                              ? ClipRRect(
-                            borderRadius: BorderRadius.circular(16.0),
-                            child: Image.network(
-                              _model.uploadedFileUrl1,
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              height: MediaQuery.of(context).size.height * 0.4,
-                              fit: BoxFit.cover,
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 45.0,
+                      height: 45.0,
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.network(
+                        currentUserPhoto,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            currentUserDisplayName ?? 'User',
+                            style: FlutterFlowTheme.of(context).bodyText1.override(
+                              fontFamily: 'Outfit',
+                              color: FlutterFlowTheme.of(context).primaryText,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w500,
                             ),
-                          )
-                              : Center(
-                            child: Text(
-                              '커버 이미지를 업로드하세요',
-                              style: TextStyle(color: Colors.white),
-                            ),
                           ),
-                        ),
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // 미리 보기 기능 추가
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black.withOpacity(0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                          const SizedBox(height: 4.0),
+                          TextFormField(
+                            controller: _model.textController1,
+                            focusNode: _model.textFieldFocusNode1,
+                            autofocus: true,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              hintText: '어디에 갔다 오셨나요?',
+                              hintStyle: FlutterFlowTheme.of(context).labelMedium.override(
+                                fontFamily: 'Readex Pro',
+                                letterSpacing: 0.0,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).alternate,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).primary,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              focusedErrorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: FlutterFlowTheme.of(context).error,
+                                  width: 2.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                            child: Text('미리 보기', style: TextStyle(color: Colors.white)),
+                            style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              fontFamily: 'Readex Pro',
+                              letterSpacing: 0.0,
+                            ),
+                            validator: _model.textController1Validator
+                                .asValidator(context),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 10,
-                          right: 10,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                type: FileType.image,
-                                withData: true,
-                                withReadStream: false,
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.image),
+                      onPressed: () async {
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(
+                          type: FileType.image,
+                          withData: true,
+                          withReadStream: false,
+                        );
+
+                        if (result != null) {
+                          setState(() {
+                            selecF = result.files.first;
+                          });
+                          // 이미지 업로드 로직
+                          setState(() => _model.isDataUploading1 = true);
+                          var selectedUploadedFiles = <FFUploadedFile>[];
+                          var downloadUrls = <String>[];
+                          try {
+                            if (result.files.first.bytes != null) {
+                              selectedUploadedFiles = [FFUploadedFile(
+                                name: result.files.first.name,
+                                bytes: result.files.first.bytes!,
+                                // 추가로 필요한 속성들 설정
+                              )];
+
+                              String? downloadUrl = await uploadData(
+                                result.files.first.name,
+                                result.files.first.bytes!,
+                                // 추가로 필요한 속성들 설정
                               );
 
-                              if (result != null) {
-                                setState(() {
-                                  selecF = result.files.first;
-                                });
-                                setState(() => _model.isDataUploading1 = true);
-                                var selectedUploadedFiles = <FFUploadedFile>[];
-                                var downloadUrls = <String>[];
-                                try {
-                                  if (result.files.first.bytes != null) {
-                                    selectedUploadedFiles = [FFUploadedFile(
-                                      name: result.files.first.name,
-                                      bytes: result.files.first.bytes!,
-                                    )];
-
-                                    String? downloadUrl = await uploadData(
-                                      result.files.first.name,
-                                      result.files.first.bytes!,
-                                    );
-
-                                    if (downloadUrl != null) {
-                                      downloadUrls = [downloadUrl];
-                                    }
-                                  }
-                                } finally {
-                                  _model.isDataUploading1 = false;
-                                }
-                                if (selectedUploadedFiles.isNotEmpty && downloadUrls.isNotEmpty) {
-                                  setState(() {
-                                    _model.uploadedLocalFile1 = selectedUploadedFiles.first;
-                                    _model.uploadedFileUrl1 = downloadUrls.first;
-                                  });
-                                } else {
-                                  setState(() {});
-                                  return;
-                                }
+                              if (downloadUrl != null) {
+                                downloadUrls = [downloadUrl];
                               }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black.withOpacity(0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: Text('커버 편집', style: TextStyle(color: Colors.white)),
-                          ),
-                        ),
-                      ],
+                            }
+                          } finally {
+                            _model.isDataUploading1 = false;
+                          }
+                          if (selectedUploadedFiles.isNotEmpty && downloadUrls.isNotEmpty) {
+                            setState(() {
+                              _model.uploadedLocalFile1 = selectedUploadedFiles.first;
+                              _model.uploadedFileUrl1 = downloadUrls.first;
+                            });
+                          } else {
+                            setState(() {});
+                            return;
+                          }
+                        }
+                      },
                     ),
-                  ),
+                    IconButton(
+                      icon: Icon(Icons.camera_alt),
+                      onPressed: () {
+                        // 카메라 사용 로직
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.gif),
+                      onPressed: () {
+                        // GIF 사용 로직
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.mic),
+                      onPressed: () {
+                        // 음성 녹음 로직
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.tag),
+                      onPressed: () {
+                        // 해시태그 사용 로직
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.format_size),
+                      onPressed: () {
+                        // 텍스트 서식 설정 로직
+                      },
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: TextField(
-                    controller: _model.textController2,
-                    focusNode: _model.textFieldFocusNode2,
-                    decoration: InputDecoration(
-                      hintText: '문구를 입력하세요...',
-                      hintStyle: FlutterFlowTheme.of(context)
-                          .labelMedium
-                          .override(
+                const SizedBox(height: 8.0),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '지도에 추가',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Readex Pro',
-                        letterSpacing: 0.0,
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                        fontSize: 16.0,
                       ),
-                      border: InputBorder.none,
                     ),
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                      fontFamily: 'Readex Pro',
-                      letterSpacing: 0.0,
+                    FFButtonWidget(
+                      onPressed: () async {
+                        if ((_model.textController1.text != '') &&
+                            ((_model.uploadedFileUrl1 != '') ||
+                                (_model.uploadedFileUrl2 != ''))) {
+                          print('${selecF}selecF값 입니다.');
+                          LatLng? latLng = await functions.getLatLng(selecF);
+
+                          await PostRecord.createDoc(currentUserReference!)
+                              .set(createPostRecordData(
+                            postTitle: _model.textController1.text,
+                            postDescription: _model.textController2.text,
+                            postUser: currentUserReference,
+                            timePosted: getCurrentTimestamp,
+                            postPhoto: _model.uploadedFileUrl1,
+                            latlng: latLng,
+                          ));
+                          //test
+                          print('$latLng입니다.');
+                          //test
+                          context.pushNamed('profile');
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'you need to add a title or image.',
+                                style: TextStyle(
+                                  color: FlutterFlowTheme.of(context).primaryText,
+                                ),
+                              ),
+                              duration: const Duration(milliseconds: 4000),
+                              backgroundColor: FlutterFlowTheme.of(context).secondary,
+                            ),
+                          );
+                        }
+                      },
+                      text: 'Post',
+                      options: FFButtonOptions(
+                        height: 30.0,
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            16.0, 0.0, 16.0, 0.0),
+                        iconPadding:
+                        const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                        color: FlutterFlowTheme.of(context).primary,
+                        textStyle:
+                        FlutterFlowTheme.of(context).titleSmall.override(
+                          fontFamily: 'Readex Pro',
+                          color: Colors.white,
+                          letterSpacing: 0.0,
+                        ),
+                        elevation: 3.0,
+                        borderSide: const BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
-                    maxLines: null,
-                  ),
+                  ],
                 ),
               ],
             ),
